@@ -88,10 +88,12 @@ public:
 
 	static std::string Implode(std::vector<std::string>& elements, const char* const separator)
 	{
-		return std::accumulate(std::begin(elements), std::end(elements), std::string(),
-		                       [separator](std::string& ss, std::string& s) {
-								   return ss.empty() ? s : ss + separator + s;
-							   });
+		return "";
+
+		//return std::accumulate(std::begin(elements), std::end(elements), std::string(),
+		                       //[separator](std::string& ss, std::string& s) {
+								   //return ss.empty() ? s : ss + separator + s;
+							   //});
 	}
 
 	static int64_t StrToL(const std::string& str, int32_t base = 10)
@@ -109,6 +111,6 @@ public:
 	static bool IEquals(const std::string& a, const std::string& b)
 	{
 		return std::equal(a.begin(), a.end(), b.begin(), b.end(),
-		                  [](char a, char b) { return tolower(a) == tolower(b); });
+			[](char a, char b) { return tolower(a) == tolower(b); });
 	}
 };

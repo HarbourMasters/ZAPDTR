@@ -14,6 +14,7 @@ class BinaryReader
 {
 public:
 	BinaryReader(Stream* nStream);
+	BinaryReader(std::shared_ptr<Stream> nStream);
 
 	void Close();
 

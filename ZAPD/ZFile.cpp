@@ -365,8 +365,12 @@ void ZFile::ExtractResources()
 	if (exporterSet != nullptr && exporterSet->beginFileFunc != nullptr)
 		exporterSet->beginFileFunc(this);
 
+	int totalMs = 0;
+
 	for (ZResource* res : resources)
 	{
+		auto start = std::chrono::steady_clock::now();
+
 		auto memStreamRes = std::shared_ptr<MemoryStream>(new MemoryStream());
 		BinaryWriter writerRes = BinaryWriter(memStreamRes);
 
@@ -385,7 +389,16 @@ void ZFile::ExtractResources()
 
 		if (exporterSet != nullptr && exporterSet->resSaveFunc != nullptr)
 			exporterSet->resSaveFunc(res, writerRes);
+
+		auto end = std::chrono::steady_clock::now();
+		auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+		totalMs += diff;
+
+		printf("Res %s in %lims\n", res->GetName().c_str(), diff);
 	}
+
+	printf("File %s in %lims\n", GetName().c_str(), totalMs);
 
 	if (memStreamFile->GetLength() > 0)
 	{
@@ -1033,7 +1046,7 @@ std::string ZFile::ProcessDeclarations()
 
 				auto filepath = outputPath / item.second->varName;
 				File::WriteAllText(
-					StringHelper::Sprintf("%s.%s.inc", filepath.c_str(), extType.c_str()),
+					StringHelper::Sprintf("%s.%s.inc", filepath.string().c_str(), extType.c_str()),
 					item.second->text);
 			}
 

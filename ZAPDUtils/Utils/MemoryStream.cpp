@@ -8,6 +8,7 @@
 MemoryStream::MemoryStream()
 {
 	buffer = std::vector<char>();
+	//buffer.reserve(1024 * 16);
 	bufferSize = 0;
 	baseAddress = 0;
 }

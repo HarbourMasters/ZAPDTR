@@ -18,6 +18,10 @@ enum class ZSkeletonType
 class ZLimbTable : public ZResource
 {
 public:
+	ZLimbType limbType = ZLimbType::Standard;
+	size_t count = 0;
+	std::vector<segptr_t> limbsAddresses;
+
 	ZLimbTable(ZFile* nParent);
 
 	void ExtractFromBinary(uint32_t nRawDataIndex, ZLimbType nLimbType, size_t nCount);
@@ -34,12 +38,6 @@ public:
 	ZResourceType GetResourceType() const override;
 
 	size_t GetRawDataSize() const override;
-
-protected:
-	ZLimbType limbType = ZLimbType::Standard;
-	size_t count = 0;
-
-	std::vector<segptr_t> limbsAddresses;
 };
 
 class ZSkeleton : public ZResource
@@ -50,6 +48,7 @@ public:
 	segptr_t limbsArrayAddress;
 	uint8_t limbCount = 0;
 	uint8_t dListCount = 0;  // FLEX SKELETON ONLY
+	ZLimbTable limbsTable;
 
 	ZSkeleton(ZFile* nParent);
 
@@ -66,7 +65,4 @@ public:
 	DeclarationAlignment GetDeclarationAlignment() const override;
 
 	uint8_t GetLimbCount();
-
-protected:
-	ZLimbTable limbsTable;
 };

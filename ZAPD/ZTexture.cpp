@@ -707,6 +707,7 @@ TextureType ZTexture::GetTextureType() const
 	return format;
 }
 
+
 void ZTexture::Save(const fs::path& outFolder)
 {
 	// Optionally generate text file containing CRC information. This is going to be a one time
@@ -722,7 +723,11 @@ void ZTexture::Save(const fs::path& outFolder)
 	if (!Directory::Exists(outPath.string()))
 		Directory::CreateDirectory(outPath.string());
 
+#ifdef _MSC_VER
+	std::filesystem::path outFileName;
+#else
 	std::filesystem::__cxx11::path outFileName;
+#endif
 
 	if (!dWordAligned)
 		outFileName = outPath / (outName + ".u32" + "." + GetExternalExtension() + ".png");

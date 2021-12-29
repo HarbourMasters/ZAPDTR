@@ -8,6 +8,11 @@ BinaryReader::BinaryReader(Stream* nStream)
 	stream.reset(nStream);
 }
 
+BinaryReader::BinaryReader(std::shared_ptr<Stream> nStream)
+{
+	stream = nStream;
+}
+
 void BinaryReader::Close()
 {
 	stream->Close();
@@ -134,15 +139,10 @@ Color3b BinaryReader::ReadColor3b()
 std::string BinaryReader::ReadString()
 {
 	std::string res;
-	char c;
+	int numChars = ReadInt32();
 
-	do
-	{
-		c = ReadChar();
-
-		if (c != 0)
-			res += c;
-	} while (c != 0);
+	for (int i = 0; i < numChars; i++)
+		res += ReadChar();
 
 	return res;
 }
