@@ -808,11 +808,8 @@ void ZFile::GenerateSourceHeaderFiles()
 {
 	OutputFormatter formatter;
 
-	std::string guard = StringHelper::ToUpper(outName.stem().string());
-
-	formatter.Write(
-		StringHelper::Sprintf("#ifndef %s_H\n#define %s_H 1\n\n", guard.c_str(), guard.c_str()));
-
+	formatter.Write("#pragma once\n");
+	std::set<std::string> nameSet;
 	for (ZResource* res : resources)
 	{
 		std::string resSrc = res->GetSourceOutputHeader("", &nameSet);
@@ -1248,6 +1245,9 @@ void ZFile::HandleUnaccountedData()
 		return;
 
 	declsAddresses.reserve(declarations.size());
+	if (Globals::Instance->otrMode)
+		return;
+
 	for (const auto& item : declarations)
 	{
 		declsAddresses.push_back(item.first);

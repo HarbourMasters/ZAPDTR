@@ -82,4 +82,5 @@ public:
 	uint8_t GetLimbCount();
 
 	ZLimbTable* limbsTable = nullptr;  // borrowed pointer, do not delete!
+
 };
