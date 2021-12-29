@@ -24,8 +24,8 @@ public:
 
 	DeclarationAlignment GetDeclarationAlignment() const override;
 
-protected:
 	size_t arrayCnt;
-	std::string childName;
 	std::vector<ZResource*> resList;
+protected:
+	std::string childName;
 };

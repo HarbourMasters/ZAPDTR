@@ -203,8 +203,10 @@ std::string Struct_800A598C::GetBodySourceCode() const
 {
 	std::string unk_8_Str;
 	std::string unk_C_Str;
-	Globals::Instance->GetSegmentedPtrName(unk_8, parent, "Struct_800A57C0", unk_8_Str);
-	Globals::Instance->GetSegmentedPtrName(unk_C, parent, "Struct_800A598C_2", unk_C_Str);
+	Globals::Instance->GetSegmentedPtrName(unk_8, parent, "Struct_800A57C0", unk_8_Str,
+	                                       parent->workerID);
+	Globals::Instance->GetSegmentedPtrName(unk_C, parent, "Struct_800A598C_2", unk_C_Str,
+	                                       parent->workerID);
 
 	std::string entryStr = StringHelper::Sprintf("\n\t\tARRAY_COUNTU(%s), ARRAY_COUNTU(%s),\n",
 	                                             unk_8_Str.c_str(), unk_C_Str.c_str());
@@ -306,7 +308,7 @@ void Struct_800A5E28::DeclareReferences(const std::string& prefix)
 		int32_t dlistLength = ZDisplayList::GetDListLength(
 			parent->GetRawData(), unk_8_Offset,
 			Globals::Instance->game == ZGame::OOT_SW97 ? DListType::F3DEX : DListType::F3DZEX);
-		ZDisplayList* unk_8_dlist = new ZDisplayList(parent);
+		unk_8_dlist = new ZDisplayList(parent);
 		unk_8_dlist->ExtractFromBinary(unk_8_Offset, dlistLength);
 
 		std::string dListStr =
@@ -322,8 +324,9 @@ std::string Struct_800A5E28::GetBodySourceCode() const
 {
 	std::string unk_4_Str;
 	std::string unk_8_Str;
-	Globals::Instance->GetSegmentedPtrName(unk_4, parent, "Struct_800A598C", unk_4_Str);
-	Globals::Instance->GetSegmentedPtrName(unk_8, parent, "Gfx", unk_8_Str);
+	Globals::Instance->GetSegmentedPtrName(unk_4, parent, "Struct_800A598C", unk_4_Str,
+	                                       parent->workerID);
+	Globals::Instance->GetSegmentedPtrName(unk_8, parent, "Gfx", unk_8_Str, parent->workerID);
 
 	std::string entryStr = "\n";
 	entryStr += StringHelper::Sprintf("\t%i, ARRAY_COUNTU(%s),\n", unk_0, unk_4_Str.c_str());

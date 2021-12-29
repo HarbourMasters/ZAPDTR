@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <map>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -54,6 +55,8 @@ enum class ZResourceType
 	TextureAnimationParams,
 	Vector,
 	Vertex,
+	Text,
+	Audio
 };
 
 class ResourceAttribute
@@ -71,6 +74,7 @@ public:
 	ZFile* parent;
 	bool outputDeclaration = true;
 	uint32_t hash = 0;
+	bool genOTRDef = false;
 
 	/**
 	 * Constructor.
@@ -117,7 +121,7 @@ public:
 	[[nodiscard]] virtual std::string GetDefaultName(const std::string& prefix) const;
 
 	virtual void GetSourceOutputCode(const std::string& prefix);
-	virtual std::string GetSourceOutputHeader(const std::string& prefix);
+	virtual std::string GetSourceOutputHeader(const std::string& prefix, std::set<std::string> *nameSet);
 	virtual void CalcHash();
 	/**
 	 * Exports the resource to binary format
@@ -216,7 +220,7 @@ public:
 	ZResourceExporter() = default;
 	virtual ~ZResourceExporter() = default;
 
-	virtual void Save(ZResource* res, fs::path outPath, BinaryWriter* writer) = 0;
+	virtual void Save(ZResource* res, const fs::path& outPath, BinaryWriter* writer) = 0;
 };
 
 offset_t Seg2Filespace(segptr_t segmentedAddress, uint32_t parentBaseAddress);

@@ -6,6 +6,10 @@
 #include "Utils/StringHelper.h"
 #include "WarningHandler.h"
 #include "ZFile.h"
+#include <Globals.h>
+#include <set>
+#include <ZDisplayList.h>
+#include <ZArray.h>
 
 ZResource::ZResource(ZFile* nParent)
 {
@@ -16,6 +20,7 @@ ZResource::ZResource(ZFile* nParent)
 	sourceOutput = "";
 	rawDataIndex = 0;
 	outputDeclaration = true;
+	hash = 0;
 
 	RegisterRequiredAttribute("Name");
 	RegisterOptionalAttribute("OutName");
@@ -96,11 +101,14 @@ void ZResource::ParseXML(tinyxml2::XMLElement* reader)
 			attrs = attrs->Next();
 		}
 
-		if (!canHaveInner && !reader->NoChildren())
+		if (!Globals::Instance->otrMode)
 		{
-			std::string errorHeader = StringHelper::Sprintf(
-				"resource '%s' with inner element/child detected", reader->Name());
-			HANDLE_ERROR_PROCESS(WarningType::InvalidXML, errorHeader, "");
+			if (!canHaveInner && !reader->NoChildren())
+			{
+				std::string errorHeader = StringHelper::Sprintf(
+					"resource '%s' with inner element/child detected", reader->Name());
+				HANDLE_ERROR_PROCESS(WarningType::InvalidXML, errorHeader, "");
+			}
 		}
 
 		for (const auto& attr : registeredAttributes)
@@ -117,14 +125,20 @@ void ZResource::ParseXML(tinyxml2::XMLElement* reader)
 
 		name = registeredAttributes.at("Name").value;
 
-		static std::regex r("[a-zA-Z_]+[a-zA-Z0-9_]*", std::regex::icase | std::regex::optimize);
-
-		if (!isInner || (isInner && name != ""))
+		// Disable this check for OTR file generation for now since it takes up a considerable amount of CPU time
+		if (!Globals::Instance->otrMode)
 		{
-			if (!std::regex_match(name, r))
+			static std::regex r("[a-zA-Z_]+[a-zA-Z0-9_]*",
+			                    std::regex::icase | std::regex::optimize);
+
+			if (!isInner || (isInner && name != ""))
 			{
-				HANDLE_ERROR_RESOURCE(WarningType::InvalidAttributeValue, parent, this,
-				                      rawDataIndex, "invalid value found for 'Name' attribute", "");
+				if (!std::regex_match(name, r))
+				{
+					HANDLE_ERROR_RESOURCE(WarningType::InvalidAttributeValue, parent, this,
+					                      rawDataIndex, "invalid value found for 'Name' attribute",
+					                      "");
+				}
 			}
 		}
 
@@ -276,13 +290,109 @@ void ZResource::GetSourceOutputCode([[maybe_unused]] const std::string& prefix)
 		else
 			decl->text = bodyStr;
 
-		decl->staticConf = staticConf;
+		// OTRTODO: This is a hack and we need something more elegant in the future...
+		if (GetResourceType() == ZResourceType::Array)
+		{
+			ZArray* arr = (ZArray*)this;
+			if (arr->resList[0]->GetResourceType() == ZResourceType::Vertex)
+			{
+				for (int i = 0; i < arr->resList.size(); i++)
+				{
+					ZVtx* vtx = (ZVtx*)arr->resList[i];
+					decl->vertexHack.push_back(vtx);
+
+				}
+			}
+		}
+
+		if (decl != nullptr)
+			decl->staticConf = staticConf;
 	}
 }
 
-std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string& prefix)
+std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string& prefix, std::set<std::string> *nameSet)
 {
-	return "";
+	if (Globals::Instance->otrMode && genOTRDef)
+	{
+		std::string str = "";;
+		std::string nameStr = StringHelper::Strip(StringHelper::Strip(name, "\n"), "\r");
+
+		std::string outName = parent->GetOutName();
+		std::string prefix = "";
+
+		if (GetResourceType() == ZResourceType::DisplayList || GetResourceType() == ZResourceType::Texture)
+		{
+			//ZDisplayList* dList = (ZDisplayList*)this;
+
+			if (StringHelper::Contains(outName, "_room_"))
+			{
+				outName = StringHelper::Split(outName, "_room")[0] + "_scene";
+			}
+		}
+
+		std::string xmlPath = StringHelper::Replace(parent->GetXmlFilePath().string(), "\\", "/");
+
+		if (StringHelper::Contains(outName, "_room_") || StringHelper::Contains(outName, "_scene"))
+			prefix = "scenes/nonmq";
+		else if (StringHelper::Contains(xmlPath, "objects/"))
+			prefix = "objects";
+		else if (StringHelper::Contains(xmlPath, "textures/"))
+			prefix = "textures";
+		else if (StringHelper::Contains(xmlPath, "overlays/"))
+			prefix = "overlays";
+		else if (StringHelper::Contains(xmlPath, "misc/"))
+			prefix = "misc";
+		else if (StringHelper::Contains(xmlPath, "code/"))
+			prefix = "code";
+		else if (StringHelper::Contains(xmlPath, "text/"))
+			prefix = "text";
+
+		if (prefix != "") {
+			str += StringHelper::Sprintf("#define d%s \"__OTR__%s/%s/%s\"", name.c_str(), prefix.c_str(), outName.c_str(), nameStr.c_str());
+        }
+		else
+			str += StringHelper::Sprintf("#define d%s \"__OTR__%s/%s\"", name.c_str(), outName.c_str(), nameStr.c_str());
+
+		if (nameSet && nameSet->find(name) == nameSet->end()) {
+			str += StringHelper::Sprintf(R"(
+#ifdef _WIN32
+static const __declspec(align(2)) char %s[] = d%s;
+#else
+static const char %s[] __attribute__((aligned (2))) = d%s;
+#endif
+			)", name.c_str(), name.c_str(), name.c_str(), name.c_str());
+
+			if (nameSet) {
+				nameSet->insert(name);
+			}
+		}
+
+		if (name == "gTitleZeldaShieldLogoMQTex")
+		{
+			std::string addName = "gTitleZeldaShieldLogoTex";
+			nameStr = StringHelper::Strip(StringHelper::Strip(addName, "\n"), "\r");
+			str += StringHelper::Sprintf("\n#define d%s \"__OTR__%s/%s/%s\"", addName.c_str(), prefix.c_str(), outName.c_str(), nameStr.c_str());
+			if (nameSet && nameSet->find(addName) == nameSet->end())
+			{
+				str += StringHelper::Sprintf(R"(
+#ifdef _WIN32
+static const __declspec(align(2)) char %s[] = d%s;
+#else
+static const char %s[] __attribute__((aligned (2))) = d%s;
+#endif
+			)", addName.c_str(), addName.c_str(), addName.c_str(), addName.c_str());
+
+				if (nameSet)
+				{
+					nameSet->insert(addName);
+				}
+			}
+		}
+
+		return str;
+	}
+	else
+		return "";
 }
 
 ZResourceType ZResource::GetResourceType() const

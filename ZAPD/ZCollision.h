@@ -10,11 +10,6 @@
 class WaterBoxHeader
 {
 public:
-	WaterBoxHeader(const std::vector<uint8_t>& rawData, uint32_t rawDataIndex);
-
-	std::string GetBodySourceCode() const;
-
-protected:
 	int16_t xMin;
 	int16_t ySurface;
 	int16_t zMin;
@@ -22,6 +17,10 @@ protected:
 	int16_t zLength;
 	int16_t pad;
 	int32_t properties;
+	
+	WaterBoxHeader(const std::vector<uint8_t>& rawData, uint32_t rawDataIndex);
+
+	std::string GetBodySourceCode() const;
 };
 
 class CameraPositionData
@@ -35,7 +34,7 @@ public:
 class CameraDataEntry
 {
 public:
-	int16_t cameraSType;
+	uint16_t cameraSType;
 	int16_t numData;
 	int32_t cameraPosDataSeg;
 };

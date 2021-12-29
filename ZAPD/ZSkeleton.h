@@ -63,6 +63,7 @@ public:
 	segptr_t limbsArrayAddress;
 	uint8_t limbCount = 0;
 	uint8_t dListCount = 0;  // FLEX SKELETON ONLY
+	ZLimbTable limbsTable;
 
 	ZSkeleton(ZFile* nParent);
 
@@ -82,4 +83,5 @@ public:
 
 protected:
 	ZLimbTable* limbsTable = nullptr;  // borrowed pointer, do not delete!
+
 };

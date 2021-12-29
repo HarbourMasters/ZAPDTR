@@ -18,6 +18,7 @@ ZTexture::ZTexture(ZFile* nParent) : ZResource(nParent)
 	height = 0;
 	dWordAligned = true;
 	splitTlut = false;
+	genOTRDef = true;
 
 	RegisterRequiredAttribute("Width");
 	RegisterRequiredAttribute("Height");
@@ -719,6 +720,7 @@ TextureType ZTexture::GetTextureType() const
 	return format;
 }
 
+
 void ZTexture::Save(const fs::path& outFolder)
 {
 	// Optionally generate text file containing CRC information. This is going to be a one time
@@ -728,6 +730,10 @@ void ZTexture::Save(const fs::path& outFolder)
 		File::WriteAllText((Globals::Instance->outputPath / (outName + ".txt")).string(),
 		                   StringHelper::Sprintf("%08lX", hash));
 	}
+
+	// Do not save png files if we're making an OTR file. They're not needed...
+	if (Globals::Instance->otrMode)
+		return;
 
 	auto outPath = GetPoolOutPath(outFolder);
 
@@ -761,6 +767,10 @@ Declaration* ZTexture::DeclareVar(const std::string& prefix,
 	std::string auxName = name;
 	std::string auxOutName = outName;
 	std::string incStr;
+
+	//if (Globals::Instance->otrMode)
+		//return nullptr;
+
 	if (auxName == "")
 		auxName = GetDefaultName(prefix);
 
@@ -804,25 +814,32 @@ Declaration* ZTexture::DeclareVar(const std::string& prefix,
 std::string ZTexture::GetBodySourceCode() const
 {
 	std::string sourceOutput;
-	size_t texSizeInc = (dWordAligned) ? 8 : 4;
-	for (size_t i = 0; i < textureDataRaw.size(); i += texSizeInc)
-	{
-		if (i % 32 == 0)
-			sourceOutput += "    ";
-		if (dWordAligned)
-			sourceOutput +=
-				StringHelper::Sprintf("0x%016llX, ", BitConverter::ToUInt64BE(textureDataRaw, i));
-		else
-			sourceOutput +=
-				StringHelper::Sprintf("0x%08llX, ", BitConverter::ToUInt32BE(textureDataRaw, i));
-		if (i % 32 == 24)
-			sourceOutput += StringHelper::Sprintf(" // 0x%06X \n", rawDataIndex + ((i / 32) * 32));
-	}
 
-	// Ensure there's always a trailing line feed to prevent dumb warnings.
-	// Please don't remove this line, unless you somehow made a way to prevent
-	// that warning when building the OoT repo.
-	sourceOutput += "\n";
+	if (!Globals::Instance->otrMode)
+	{
+		size_t texSizeInc = (dWordAligned) ? 8 : 4;
+		for (size_t i = 0; i < textureDataRaw.size(); i += texSizeInc)
+		{
+			if (i % 32 == 0)
+				sourceOutput += "    ";
+			if (dWordAligned)
+				sourceOutput += StringHelper::Sprintf("0x%016llX, ",
+				                                      BitConverter::ToUInt64BE(textureDataRaw, i));
+			else
+				sourceOutput += StringHelper::Sprintf("0x%08llX, ",
+				                                      BitConverter::ToUInt32BE(textureDataRaw, i));
+			if (i % 32 == 24)
+				sourceOutput +=
+					StringHelper::Sprintf(" // 0x%06X \n", rawDataIndex + ((i / 32) * 32));
+		}
+
+		// Ensure there's always a trailing line feed to prevent dumb warnings.
+		// Please don't remove this line, unless you somehow made a way to prevent
+		// that warning when building the OoT repo.
+		sourceOutput += "\n";
+	} else if (Globals::Instance->buildRawTexture) {
+		sourceOutput += std::string(textureDataRaw.begin(), textureDataRaw.end());
+	}
 
 	return sourceOutput;
 }
@@ -844,8 +861,11 @@ std::string ZTexture::GetSourceTypeName() const
 
 void ZTexture::CalcHash()
 {
-	auto parentRawData = parent->GetRawData();
-	hash = CRC32B(parentRawData.data() + rawDataIndex, GetRawDataSize());
+	//if (hash == 0)
+	{
+		const auto& parentRawData = parent->GetRawData();
+		hash = CRC32B(parentRawData.data() + rawDataIndex, GetRawDataSize());
+	}
 }
 
 std::string ZTexture::GetExternalExtension() const

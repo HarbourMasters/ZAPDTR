@@ -16,7 +16,7 @@ public:
 	std::string GetSourceTypeName() const;
 	size_t GetRawDataSize() const;
 
-protected:
+public:
 	uint8_t type;
 	int16_t x, y, z;
 	uint8_t r, g, b;

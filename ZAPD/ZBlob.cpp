@@ -11,6 +11,7 @@ REGISTER_ZFILENODE(Blob, ZBlob);
 
 ZBlob::ZBlob(ZFile* nParent) : ZResource(nParent)
 {
+	genOTRDef = true;
 	RegisterRequiredAttribute("Size");
 }
 
@@ -85,7 +86,8 @@ std::string ZBlob::GetBodySourceCode() const
 
 void ZBlob::Save(const fs::path& outFolder)
 {
-	File::WriteAllBytes((outFolder / (name + ".bin")).string(), blobData);
+	if (!Globals::Instance->otrMode)
+		File::WriteAllBytes((outFolder / (name + ".bin")).string(), blobData);
 }
 
 bool ZBlob::IsExternalResource() const

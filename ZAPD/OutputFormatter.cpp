@@ -1,32 +1,40 @@
 #include "OutputFormatter.h"
+#include <Globals.h>
 
 void OutputFormatter::Flush()
 {
-	if (col > lineLimit)
+	//if (!Globals::Instance->otrMode) // OTRTODO: MULTITHREADING
 	{
-		str.append(1, '\n');
-		str.append(currentIndent, ' ');
+		if (col > lineLimit && !Globals::Instance->otrMode)
+		{
+			str.append(1, '\n');
+			str.append(currentIndent, ' ');
 
-		uint32_t newCol = currentIndent + (wordP - word);
+			uint32_t newCol = currentIndent + (wordP - word);
 
-		for (uint32_t i = 0; i < wordNests; i++)
-			nestIndent[nest - i] -= col - newCol;
+			for (uint32_t i = 0; i < wordNests; i++)
+				nestIndent[nest - i] -= col - newCol;
 
-		col = newCol;
+			col = newCol;
+		}
+		else
+		{
+			str.append(space, spaceP - space);
+		}
+		spaceP = space;
+
+		str.append(word, wordP - word);
+		wordP = word;
+		wordNests = 0;
 	}
-	else
-	{
-		str.append(space, spaceP - space);
-	}
-	spaceP = space;
-
-	str.append(word, wordP - word);
-	wordP = word;
-	wordNests = 0;
 }
 
 int OutputFormatter::Write(const char* buf, int count)
 {
+	// OTRTODO
+	//if (!Globals::Instance->singleThreaded)
+		//return 0;
+
 	for (int i = 0; i < count; i++)
 	{
 		char c = buf[i];
@@ -88,7 +96,7 @@ int OutputFormatter::Write(const std::string& buf)
 	return Write(buf.data(), buf.size());
 }
 
-OutputFormatter* OutputFormatter::Instance;
+thread_local OutputFormatter* OutputFormatter::Instance;
 
 int OutputFormatter::WriteStatic(const char* buf, int count)
 {
