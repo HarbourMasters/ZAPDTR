@@ -176,6 +176,9 @@ std::string Declaration::GetExternStr() const
 		return "";
 	}
 
+	if (Globals::Instance->otrMode && (varType == "Gfx" || varType == "u64"))
+		return "";
+
 	if (isArray)
 	{
 		if (arrayItemCntStr != "" && (IsStatic() || forceArrayCnt))

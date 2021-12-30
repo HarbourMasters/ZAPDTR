@@ -348,6 +348,22 @@ void ZTexture::DeclareReferences([[maybe_unused]] const std::string& prefix)
 	}
 }
 
+std::string ZTexture::GetSourceOutputHeader(const std::string& prefix)
+{
+	if (Globals::Instance->otrMode)
+	{
+		std::string str = "";
+
+		//str += StringHelper::Sprintf("#define %s ResourceMgr_LoadTexOriginalByName(\"%s/%s\")\n", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+		//str += StringHelper::Sprintf("#define %s_str \"%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+
+		return str;
+	}
+	else
+		return ZResource::GetSourceOutputHeader(prefix);
+}
+
 void ZTexture::PrepareRawDataFromFile(const fs::path& pngFilePath)
 {
 	switch (format)
@@ -723,11 +739,11 @@ void ZTexture::Save(const fs::path& outFolder)
 	if (!Directory::Exists(outPath.string()))
 		Directory::CreateDirectory(outPath.string());
 
-#ifdef _MSC_VER
-	std::filesystem::path outFileName;
-#else
-	std::filesystem::__cxx11::path outFileName;
-#endif
+//#ifdef _MSC_VER
+	fs::path outFileName;
+//#else
+	//std::filesystem::__cxx11::path outFileName;
+//#endif
 
 	if (!dWordAligned)
 		outFileName = outPath / (outName + ".u32" + "." + GetExternalExtension() + ".png");
@@ -754,6 +770,10 @@ Declaration* ZTexture::DeclareVar(const std::string& prefix,
 	std::string auxName = name;
 	std::string auxOutName = outName;
 	std::string incStr;
+
+	//if (Globals::Instance->otrMode)
+		//return nullptr;
+
 	if (auxName == "")
 		auxName = GetDefaultName(prefix);
 

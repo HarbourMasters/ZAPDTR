@@ -777,10 +777,13 @@ void ZFile::GenerateSourceFiles()
 	if (Globals::Instance->verbosity >= VerbosityLevel::VERBOSITY_INFO)
 		printf("Writing C file: %s\n", outPath.c_str());
 
-	OutputFormatter formatter;
-	formatter.Write(sourceOutput);
+	//if (!Globals::Instance->otrMode)
+	{
+		OutputFormatter formatter;
+		formatter.Write(sourceOutput);
 
-	File::WriteAllText(outPath, formatter.GetOutput());
+		File::WriteAllText(outPath, formatter.GetOutput());
+	}
 
 	GenerateSourceHeaderFiles();
 }
@@ -816,7 +819,7 @@ void ZFile::GenerateSourceHeaderFiles()
 std::string ZFile::GetHeaderInclude() const
 {
 	std::string headers = StringHelper::Sprintf("#include \"%s.h\"\n",
-	                                            (outName.parent_path() / outName.stem()).c_str());
+	                                            (outName.parent_path() / outName.stem()).string().c_str());
 
 	return headers;
 }
@@ -850,7 +853,7 @@ std::string ZFile::GetExternalFileHeaderInclude() const
 			}
 
 			externalFilesIncludes +=
-				StringHelper::Sprintf("#include \"%s.h\"\n", outputFolderPath.c_str());
+				StringHelper::Sprintf("#include \"%s.h\"\n", outputFolderPath.string().c_str());
 		}
 	}
 
@@ -868,10 +871,14 @@ void ZFile::GeneratePlaceholderDeclarations()
 		}
 
 		Declaration* decl = res->DeclareVar(GetName(), "");
-		decl->staticConf = res->GetStaticConf();
-		if (res->GetResourceType() == ZResourceType::Symbol)
+
+		if (decl != nullptr)
 		{
-			decl->staticConf = StaticConfig::Off;
+			decl->staticConf = res->GetStaticConf();
+			if (res->GetResourceType() == ZResourceType::Symbol)
+			{
+				decl->staticConf = StaticConfig::Off;
+			}
 		}
 	}
 }
@@ -1138,7 +1145,10 @@ std::string ZFile::ProcessTextureIntersections([[maybe_unused]] const std::strin
 			{
 				// Shrink palette so it doesn't overlap
 				currentTex->SetDimensions(offsetDiff / currentTex->GetPixelMultiplyer(), 1);
-				declarations.at(currentOffset)->size = currentTex->GetRawDataSize();
+
+				if (declarations.find(currentOffset) != declarations.end())
+					declarations.at(currentOffset)->size = currentTex->GetRawDataSize();
+				
 				currentTex->DeclareVar(GetName(), "");
 			}
 			else

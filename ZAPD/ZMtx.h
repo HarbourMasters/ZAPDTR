@@ -19,6 +19,6 @@ public:
 	size_t GetRawDataSize() const override;
 	DeclarationAlignment GetDeclarationAlignment() const override;
 
-protected:
+public:
 	std::array<std::array<int32_t, 4>, 4> mtx;
 };

@@ -19,7 +19,7 @@ public:
 	size_t GetRawDataSize() const override;
 	segptr_t GetListAddress() const;
 
-protected:
+public:
 	int32_t numPoints;
 	int8_t unk1;   // (MM Only)
 	int16_t unk2;  // (MM Only)
@@ -45,7 +45,7 @@ public:
 	size_t GetRawDataSize() const override;
 	void SetNumPaths(uint32_t nNumPaths);
 
-protected:
+public:
 	uint32_t numPaths;
 	std::vector<PathwayEntry> pathways;
 };

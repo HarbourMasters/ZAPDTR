@@ -117,6 +117,19 @@ std::string ZDisplayList::GetDefaultName(const std::string& prefix) const
 	return StringHelper::Sprintf("%sDL_%06X", prefix.c_str(), rawDataIndex);
 }
 
+std::string ZDisplayList::GetSourceOutputHeader(const std::string& prefix)
+{
+	if (Globals::Instance->otrMode)
+	{
+		std::string str = "";;
+		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+
+		return str;
+	}
+	else
+		return ZResource::GetSourceOutputHeader(prefix);
+}
+
 void ZDisplayList::ParseF3DZEX(F3DZEXOpcode opcode, uint64_t data, int32_t i,
                                const std::string& prefix, char* line)
 {

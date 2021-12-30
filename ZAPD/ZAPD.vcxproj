@@ -78,6 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)..\ZAPDUtils;$(ProjectDir)..\lib\tinyxml2;$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\lib\elfio;$(ProjectDir)..\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\otrlib\otrlib\;$(LibraryPath)</LibraryPath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)ZAPD\lib\tinyxml2;$(SolutionDir)ZAPD\lib\libgfxd;$(SolutionDir)ZAPD\lib\elfio;$(SolutionDir)ZAPD\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
