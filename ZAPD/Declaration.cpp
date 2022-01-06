@@ -176,7 +176,8 @@ std::string Declaration::GetExternStr() const
 		return "";
 	}
 
-	if (Globals::Instance->otrMode && (varType == "Gfx" || varType == "u64"))
+	if (Globals::Instance->otrMode && (varType == "Gfx" || varType == "u64" || varType == "AnimationHeader" || varType == "LinkAnimationHeader" || 
+		varType == "StandardLimb" || varType == "JointIndex" || varType == "Vtx"))
 		return "";
 
 	if (isArray)

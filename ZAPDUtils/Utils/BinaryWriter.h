@@ -23,6 +23,7 @@ public:
 	void Write(int16_t value);
 	void Write(uint16_t value);
 	void Write(int32_t value);
+	void Write(int32_t valueA, int32_t valueB);
 	void Write(uint32_t value);
 	void Write(int64_t value);
 	void Write(uint64_t value);

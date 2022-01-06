@@ -74,6 +74,7 @@ public:
 
 	void AddSegment(int32_t segment, ZFile* file);
 	bool HasSegment(int32_t segment);
+	ZFile* GetSegment(int32_t segment);
 
 	ZResourceExporter* GetExporter(ZResourceType resType);
 	ExporterSet* GetExporterSet();

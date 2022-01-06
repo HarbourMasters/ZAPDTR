@@ -26,6 +26,19 @@ void ZAnimation::ParseRawData()
 	frameCount = BitConverter::ToInt16BE(parent->GetRawData(), rawDataIndex + 0);
 }
 
+std::string ZAnimation::GetSourceOutputHeader(const std::string& prefix)
+{
+	if (Globals::Instance->otrMode)
+	{
+		std::string str = "";
+		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+
+		return str;
+	}
+	else
+		return ZResource::GetSourceOutputHeader(prefix);
+}
+
 ZResourceType ZAnimation::GetResourceType() const
 {
 	return ZResourceType::Animation;

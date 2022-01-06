@@ -23,6 +23,7 @@ public:
 
 	ZAnimation(ZFile* nParent);
 
+	std::string GetSourceOutputHeader(const std::string& prefix) override;
 	ZResourceType GetResourceType() const override;
 
 protected:
@@ -69,7 +70,7 @@ public:
 
 class TransformData
 {
-protected:
+public:
 	ZFile* parent;
 
 	///* 0x0000 */ u16 unk_00; // appears to be flags
@@ -97,7 +98,7 @@ public:
 
 class ZCurveAnimation : public ZAnimation
 {
-protected:
+public:
 	segptr_t skelOffset = 0;
 
 	///* 0x0000 */ u8* refIndex;

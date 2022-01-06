@@ -60,6 +60,12 @@ void BinaryWriter::Write(int32_t value)
 	stream->Write((char*)&value, sizeof(int32_t));
 }
 
+void BinaryWriter::Write(int32_t valueA, int32_t valueB)
+{
+	Write(valueA);
+	Write(valueB);
+}
+
 void BinaryWriter::Write(uint32_t value)
 {
 	stream->Write((char*)&value, sizeof(uint32_t));

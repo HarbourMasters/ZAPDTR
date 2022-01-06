@@ -76,7 +76,7 @@ public:
 
 	virtual std::string GetCommandHex() const;
 
-protected:
+public:
 	ZRoom* zRoom;
 
 	uint8_t cmdArg1;

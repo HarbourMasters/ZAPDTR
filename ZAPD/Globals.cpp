@@ -49,6 +49,17 @@ bool Globals::HasSegment(int32_t segment)
 	return std::find(segments.begin(), segments.end(), segment) != segments.end();
 }
 
+ZFile* Globals::GetSegment(int32_t segment)
+{
+	if (HasSegment(segment))
+	{
+		int idx = std::find(segments.begin(), segments.end(), segment) - segments.begin();
+		return files[idx];
+	}
+	else
+		return nullptr;
+}
+
 std::map<std::string, ExporterSet*>& Globals::GetExporterMap()
 {
 	static std::map<std::string, ExporterSet*> exporters;
