@@ -777,7 +777,7 @@ void ZFile::GenerateSourceFiles()
 	if (Globals::Instance->verbosity >= VerbosityLevel::VERBOSITY_INFO)
 		printf("Writing C file: %s\n", outPath.c_str());
 
-	//if (!Globals::Instance->otrMode)
+	if (!Globals::Instance->otrMode)
 	{
 		OutputFormatter formatter;
 		formatter.Write(sourceOutput);
@@ -1043,18 +1043,21 @@ std::string ZFile::ProcessDeclarations()
 		{
 			if (item.second->isExternal)
 			{
-				// HACK
-				std::string extType;
+				if (!Globals::Instance->otrMode)
+				{
+					// HACK
+					std::string extType;
 
-				if (item.second->varType == "Gfx")
-					extType = "dlist";
-				else if (item.second->varType == "Vtx")
-					extType = "vtx";
+					if (item.second->varType == "Gfx")
+						extType = "dlist";
+					else if (item.second->varType == "Vtx")
+						extType = "vtx";
 
-				auto filepath = outputPath / item.second->varName;
-				File::WriteAllText(
-					StringHelper::Sprintf("%s.%s.inc", filepath.string().c_str(), extType.c_str()),
-					item.second->text);
+					auto filepath = outputPath / item.second->varName;
+					File::WriteAllText(
+						StringHelper::Sprintf("%s.%s.inc", filepath.string().c_str(), extType.c_str()),
+						item.second->text);
+				}
 			}
 
 			output += item.second->GetExternalDeclarationStr();

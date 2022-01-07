@@ -12,6 +12,7 @@ REGISTER_ZFILENODE(Array, ZArray);
 ZArray::ZArray(ZFile* nParent) : ZResource(nParent)
 {
 	canHaveInner = true;
+	genOTRDef = true;
 	RegisterRequiredAttribute("Count");
 }
 

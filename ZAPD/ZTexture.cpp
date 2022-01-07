@@ -17,6 +17,7 @@ ZTexture::ZTexture(ZFile* nParent) : ZResource(nParent)
 	width = 0;
 	height = 0;
 	dWordAligned = true;
+	genOTRDef = true;
 
 	RegisterRequiredAttribute("Width");
 	RegisterRequiredAttribute("Height");
@@ -346,22 +347,6 @@ void ZTexture::DeclareReferences([[maybe_unused]] const std::string& prefix)
 		}
 		SetTlut(tlut);
 	}
-}
-
-std::string ZTexture::GetSourceOutputHeader(const std::string& prefix)
-{
-	if (Globals::Instance->otrMode)
-	{
-		std::string str = "";
-
-		//str += StringHelper::Sprintf("#define %s ResourceMgr_LoadTexOriginalByName(\"%s/%s\")\n", name.c_str(), parent->GetOutName().c_str(), name.c_str());
-		//str += StringHelper::Sprintf("#define %s_str \"%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
-		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
-
-		return str;
-	}
-	else
-		return ZResource::GetSourceOutputHeader(prefix);
 }
 
 void ZTexture::PrepareRawDataFromFile(const fs::path& pngFilePath)
@@ -726,6 +711,10 @@ TextureType ZTexture::GetTextureType() const
 
 void ZTexture::Save(const fs::path& outFolder)
 {
+	// Do not save png files if we're making an OTR file. They're not needed...
+	if (Globals::Instance->otrMode)
+		return;
+
 	// Optionally generate text file containing CRC information. This is going to be a one time
 	// process for generating the Texture Pool XML.
 	if (Globals::Instance->outputCrc)

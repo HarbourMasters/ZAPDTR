@@ -67,6 +67,7 @@ public:
 	ZFile* parent;
 	bool outputDeclaration = true;
 	uint32_t hash = 0;
+	bool genOTRDef = false;
 
 	/**
 	 * Constructor.

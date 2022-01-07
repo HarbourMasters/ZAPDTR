@@ -14,6 +14,8 @@ ZSkeleton::ZSkeleton(ZFile* nParent) : ZResource(nParent), limbsTable(nParent)
 {
 	RegisterRequiredAttribute("Type");
 	RegisterRequiredAttribute("LimbType");
+
+	genOTRDef = true;
 }
 
 void ZSkeleton::ParseXML(tinyxml2::XMLElement* reader)

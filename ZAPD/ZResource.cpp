@@ -6,6 +6,7 @@
 #include "Utils/StringHelper.h"
 #include "WarningHandler.h"
 #include "ZFile.h"
+#include <Globals.h>
 
 ZResource::ZResource(ZFile* nParent)
 {
@@ -278,7 +279,15 @@ void ZResource::GetSourceOutputCode([[maybe_unused]] const std::string& prefix)
 
 std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string& prefix)
 {
-	return "";
+	if (Globals::Instance->otrMode && genOTRDef)
+	{
+		std::string str = "";;
+		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+
+		return str;
+	}
+	else
+		return "";
 }
 
 ZResourceType ZResource::GetResourceType() const
