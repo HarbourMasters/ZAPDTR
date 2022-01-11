@@ -282,7 +282,9 @@ std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string&
 	if (Globals::Instance->otrMode && genOTRDef)
 	{
 		std::string str = "";;
-		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), name.c_str());
+		std::string nameStr = StringHelper::Strip(StringHelper::Strip(name, "\n"), "\r");
+
+		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), nameStr.c_str());
 
 		return str;
 	}

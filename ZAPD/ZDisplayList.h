@@ -353,7 +353,6 @@ public:
 
 	Declaration* DeclareVar(const std::string& prefix, const std::string& bodyStr) override;
 	std::string GetDefaultName(const std::string& prefix) const override;
-	std::string GetSourceOutputHeader(const std::string& prefix) override;
 
 	void TextureGenCheck();
 	static bool TextureGenCheck(int32_t texWidth, int32_t texHeight, uint32_t texAddr,

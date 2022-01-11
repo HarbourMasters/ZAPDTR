@@ -9,6 +9,7 @@ REGISTER_ZFILENODE(Cutscene, ZCutscene);
 
 ZCutscene::ZCutscene(ZFile* nParent) : ZCutsceneBase(nParent)
 {
+	genOTRDef = true;
 }
 
 ZCutscene::~ZCutscene()

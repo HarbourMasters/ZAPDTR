@@ -29,7 +29,7 @@ public:
 
 	size_t GetRawDataSize() const override;
 
-protected:
+public:
 	uint16_t unk_0;
 	int16_t unk_2;
 	int16_t unk_4;
@@ -53,7 +53,7 @@ public:
 
 	size_t GetRawDataSize() const override;
 
-protected:
+public:
 	uint8_t unk_0;
 	int16_t x;
 	int16_t y;
@@ -76,7 +76,7 @@ public:
 
 	size_t GetRawDataSize() const override;
 
-protected:
+public:
 	uint16_t unk_0;  // Length of unk_8
 	uint16_t unk_2;  // Length of unk_C
 	uint16_t unk_4;  // 0 or 1 // Used as an index for unk_C
@@ -102,7 +102,7 @@ public:
 
 	size_t GetRawDataSize() const override;
 
-protected:
+public:
 	uint16_t unk_0;  // Vtx count
 	uint16_t unk_2;  // Length of unk_4
 	segptr_t unk_4;  // Struct_800A598C*

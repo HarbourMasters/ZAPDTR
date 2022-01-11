@@ -1,28 +1,32 @@
 #include "OutputFormatter.h"
+#include <Globals.h>
 
 void OutputFormatter::Flush()
 {
-	if (col > lineLimit)
+	//if (!Globals::Instance->otrMode)
 	{
-		str.append(1, '\n');
-		str.append(currentIndent, ' ');
+		if (col > lineLimit && !Globals::Instance->otrMode)
+		{
+			str.append(1, '\n');
+			str.append(currentIndent, ' ');
 
-		uint32_t newCol = currentIndent + (wordP - word);
+			uint32_t newCol = currentIndent + (wordP - word);
 
-		for (uint32_t i = 0; i < wordNests; i++)
-			nestIndent[nest - i] -= col - newCol;
+			for (uint32_t i = 0; i < wordNests; i++)
+				nestIndent[nest - i] -= col - newCol;
 
-		col = newCol;
+			col = newCol;
+		}
+		else
+		{
+			str.append(space, spaceP - space);
+		}
+		spaceP = space;
+
+		str.append(word, wordP - word);
+		wordP = word;
+		wordNests = 0;
 	}
-	else
-	{
-		str.append(space, spaceP - space);
-	}
-	spaceP = space;
-
-	str.append(word, wordP - word);
-	wordP = word;
-	wordNests = 0;
 }
 
 int OutputFormatter::Write(const char* buf, int count)
