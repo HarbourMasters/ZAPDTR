@@ -28,6 +28,14 @@ void SetPathways::ParseRawDataLate()
 		pathwayList.SetNumPaths(numPaths);
 	}
 
+	if (Globals::Instance->otrMode)
+	{
+		auto zPath = (ZPath*)parent->FindResource(segmentOffset);
+		
+		if (zPath != nullptr)
+			pathwayList = *zPath;
+	}
+
 	pathwayList.ExtractFromFile(segmentOffset);
 }
 

@@ -72,12 +72,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\otrlib\otrlib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\libultraship\libultraship\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\ZAPDUtils;$(ProjectDir)..\lib\tinyxml2;$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\lib\elfio;$(ProjectDir)..\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)..\ZAPDUtils;$(ProjectDir)..\lib\tinyxml2;$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\lib\elfio;$(ProjectDir)..\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\otrlib\otrlib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\libultraship\libultraship\;$(LibraryPath)</LibraryPath>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -112,7 +112,7 @@
     </ClCompile>
     <Link>
       <Profile>true</Profile>
-      <AdditionalDependencies>ZAPDUtils.lib;/WHOLEARCHIVE:OTRExporter.lib;otrlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZAPDUtils.lib;/WHOLEARCHIVE:OTRExporter.lib;libultraship.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
@@ -154,7 +154,7 @@ python3 ZAPD/genbuildinfo.py</Command>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ZAPDUtils.lib;/WHOLEARCHIVE:OTRExporter.lib;otrlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZAPDUtils.lib;/WHOLEARCHIVE:OTRExporter.lib;libultraship.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
