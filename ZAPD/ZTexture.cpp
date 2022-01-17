@@ -728,11 +728,7 @@ void ZTexture::Save(const fs::path& outFolder)
 	if (!Directory::Exists(outPath.string()))
 		Directory::CreateDirectory(outPath.string());
 
-//#ifdef _MSC_VER
 	fs::path outFileName;
-//#else
-	//std::filesystem::__cxx11::path outFileName;
-//#endif
 
 	if (!dWordAligned)
 		outFileName = outPath / (outName + ".u32" + "." + GetExternalExtension() + ".png");
