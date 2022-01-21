@@ -7,6 +7,7 @@
 #include "WarningHandler.h"
 #include "ZFile.h"
 #include <Globals.h>
+#include <ZDisplayList.h>
 
 ZResource::ZResource(ZFile* nParent)
 {
@@ -284,7 +285,19 @@ std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string&
 		std::string str = "";;
 		std::string nameStr = StringHelper::Strip(StringHelper::Strip(name, "\n"), "\r");
 
-		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), parent->GetOutName().c_str(), nameStr.c_str());
+		std::string outName = parent->GetOutName();
+
+		if (GetResourceType() == ZResourceType::DisplayList)
+		{
+			ZDisplayList* dList = (ZDisplayList*)this;
+
+			if (StringHelper::Contains(outName, "_room_"))
+			{
+				outName = StringHelper::Split(outName, "_room")[0] + "_scene";
+			}
+		}
+
+		str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s\"", name.c_str(), outName.c_str(), nameStr.c_str());
 
 		return str;
 	}
