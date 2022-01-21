@@ -427,7 +427,7 @@ void ZFile::AddResource(ZResource* res)
 	resources.push_back(res);
 }
 
-ZResource* ZFile::FindResource(uint32_t rawDataIndex)
+ZResource* ZFile::FindResource(offset_t rawDataIndex)
 {
 	for (ZResource* res : resources)
 	{
@@ -800,8 +800,11 @@ void ZFile::GenerateSourceHeaderFiles()
 {
 	OutputFormatter formatter;
 
-	formatter.Write("#pragma once\n");
-	std::set<std::string> nameSet;
+	std::string objectNameUpper = StringHelper::ToUpper(GetName());
+
+	formatter.Write(StringHelper::Sprintf("#ifndef %s_H\n#define %s_H 1\n\n",
+	                                      objectNameUpper.c_str(), objectNameUpper.c_str()));
+
 	for (ZResource* res : resources)
 	{
 		std::string resSrc = res->GetSourceOutputHeader("", &nameSet);
@@ -817,6 +820,8 @@ void ZFile::GenerateSourceHeaderFiles()
 	}
 
 	formatter.Write(ProcessExterns());
+
+	formatter.Write("#endif\n");
 
 	fs::path headerFilename = GetSourceOutputFolderPath() / outName.stem().concat(".h");
 
