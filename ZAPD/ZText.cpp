@@ -1,0 +1,70 @@
+#include "ZText.h"
+
+#include "Globals.h"
+#include "Utils/BitConverter.h"
+#include "Utils/File.h"
+#include "Utils/Path.h"
+#include "Utils/StringHelper.h"
+#include "ZFile.h"
+
+REGISTER_ZFILENODE(Text, ZText);
+
+ZText::ZText(ZFile* nParent) : ZResource(nParent)
+{
+	RegisterRequiredAttribute("CodeOffset");
+}
+
+void ZText::ParseRawData()
+{
+	ZResource::ParseRawData();
+
+	const auto& rawData = parent->GetRawData();
+	uint32_t currentPtr = StringHelper::StrToL(registeredAttributes.at("CodeOffset").value, 16);
+
+	// TODO: This needs to be more elegant...
+	std::vector<uint8_t> codeData = File::ReadAllBytes(Globals::Instance->baseRomPath.string() + "\\code");
+
+	while (true)
+	{
+		MessageEntry msgEntry;
+		msgEntry.id = BitConverter::ToInt16BE(codeData, currentPtr + 0);
+		msgEntry.textboxType = (codeData[currentPtr + 2] & 0xF0) >> 4;
+		msgEntry.textboxYPos = (codeData[currentPtr + 2] & 0x0F);
+		msgEntry.segmentId = (codeData[currentPtr + 4]);
+		msgEntry.msgOffset = BitConverter::ToInt32BE(codeData, currentPtr + 4) & 0x00FFFFFF;
+		uint32_t msgPtr = msgEntry.msgOffset;
+
+		unsigned char c = rawData[msgPtr];
+
+		while (c != '\0')
+		{
+			msgEntry.msg += c;
+			msgPtr++;
+			c = rawData[msgPtr];
+		}
+
+		messages.push_back(msgEntry);
+
+		if (msgEntry.id == 0xFFFC || msgEntry.id == 0xFFFF)
+			break;
+
+		currentPtr += 8;
+	}
+
+	int bp2 = 0;
+}
+
+std::string ZText::GetSourceTypeName() const
+{
+	return "u8";
+}
+
+size_t ZText::GetRawDataSize() const
+{
+	return 1;
+}
+
+ZResourceType ZText::GetResourceType() const
+{
+	return ZResourceType::Text;
+}

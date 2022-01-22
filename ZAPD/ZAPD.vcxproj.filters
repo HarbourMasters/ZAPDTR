@@ -282,6 +282,9 @@
     <ClCompile Include="WarningHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ZText.cpp">
+      <Filter>Source Files\Z64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZRoom\ZRoom.h">
@@ -535,6 +538,9 @@
     </ClInclude>
     <ClInclude Include="WarningHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZText.h">
+      <Filter>Header Files\Z64</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -234,6 +234,7 @@ python3 ZAPD/genbuildinfo.py</Command>
     <ClCompile Include="ZRoom\ZRoomCommand.cpp" />
     <ClCompile Include="ZString.cpp" />
     <ClCompile Include="ZSymbol.cpp" />
+    <ClCompile Include="ZText.cpp" />
     <ClCompile Include="ZTexture.cpp" />
     <ClCompile Include="ZTextureAnimation.cpp" />
     <ClCompile Include="ZVector.cpp" />
@@ -320,6 +321,7 @@ python3 ZAPD/genbuildinfo.py</Command>
     <ClInclude Include="ZRoom\ZRoomCommand.h" />
     <ClInclude Include="ZString.h" />
     <ClInclude Include="ZSymbol.h" />
+    <ClInclude Include="ZText.h" />
     <ClInclude Include="ZTexture.h" />
     <ClInclude Include="ZTextureAnimation.h" />
     <ClInclude Include="ZVector.h" />

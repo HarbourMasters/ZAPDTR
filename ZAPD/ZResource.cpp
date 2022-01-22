@@ -287,9 +287,9 @@ std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string&
 
 		std::string outName = parent->GetOutName();
 
-		if (GetResourceType() == ZResourceType::DisplayList)
+		if (GetResourceType() == ZResourceType::DisplayList || GetResourceType() == ZResourceType::Texture)
 		{
-			ZDisplayList* dList = (ZDisplayList*)this;
+			//ZDisplayList* dList = (ZDisplayList*)this;
 
 			if (StringHelper::Contains(outName, "_room_"))
 			{

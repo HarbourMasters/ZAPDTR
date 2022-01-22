@@ -11,6 +11,7 @@ REGISTER_ZFILENODE(Blob, ZBlob);
 
 ZBlob::ZBlob(ZFile* nParent) : ZResource(nParent)
 {
+	genOTRDef = true;
 	RegisterRequiredAttribute("Size");
 }
 
