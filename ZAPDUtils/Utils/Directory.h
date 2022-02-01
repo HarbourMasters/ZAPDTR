@@ -23,12 +23,19 @@ public:
 
 	static void CreateDirectory(const std::string& path)
 	{
+
+#ifdef _MSC_VER
+		std::string splitChar = "\\";
+#else
+		std::string splitChar = "/";
+#endif
+
 		std::string curPath;
-		std::vector<std::string> split = StringHelper::Split(path, "/");
+		std::vector<std::string> split = StringHelper::Split(path, splitChar);
 
 		for (std::string s : split)
 		{
-			curPath += s + "/";
+			curPath += s + splitChar;
 
 			if (!Exists(curPath))
 				fs::create_directory(curPath);
