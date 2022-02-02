@@ -35,11 +35,34 @@ void ZText::ParseRawData()
 		uint32_t msgPtr = msgEntry.msgOffset;
 
 		unsigned char c = rawData[msgPtr];
+		unsigned int extra = 0;
 
-		while (c != '\0')
+		while (c != '\0' || extra > 0)
 		{
 			msgEntry.msg += c;
 			msgPtr++;
+
+			if (extra == 0)
+			{
+				if (c == 0x05 || c == 0x13 || c == 0x0E || c == 0x0C || c == 0x1E || c == 0x06 ||
+				    c == 0x14)
+				{
+					extra = 1;
+				}
+				else if (c == 0x07 || c == 0x12)
+				{
+					extra = 2;
+				}
+				else if (c == 0x15)
+				{
+					extra = 3;
+				}
+			}
+			else
+			{
+				extra--;
+			}
+
 			c = rawData[msgPtr];
 		}
 
