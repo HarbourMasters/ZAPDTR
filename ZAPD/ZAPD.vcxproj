@@ -164,7 +164,6 @@ python3 ZAPD/genbuildinfo.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\build\ZAPD\BuildInfo.cpp" />
     <ClCompile Include="..\lib\libgfxd\gfxd.c" />
     <ClCompile Include="..\lib\libgfxd\uc.c" />
     <ClCompile Include="..\lib\libgfxd\uc_f3d.c" />

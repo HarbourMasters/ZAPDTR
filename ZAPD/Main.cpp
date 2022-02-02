@@ -24,7 +24,8 @@
 #include <string_view>
 #include "tinyxml2.h"
 
-extern const char gBuildHash[];
+//extern const char gBuildHash[];
+const char gBuildHash[] = "";
 
 bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path& outPath,
            ZFileMode fileMode);

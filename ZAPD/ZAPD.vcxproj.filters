@@ -273,9 +273,6 @@
     <ClCompile Include="OtherStructs\SkinLimbStructs.cpp">
       <Filter>Source Files\Z64</Filter>
     </ClCompile>
-    <ClCompile Include="..\build\ZAPD\BuildInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ZPlayerAnimationData.cpp">
       <Filter>Source Files\Z64</Filter>
     </ClCompile>
