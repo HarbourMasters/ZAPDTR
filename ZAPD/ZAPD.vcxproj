@@ -116,9 +116,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>cd ..
-mkdir build\ZAPD
-python3 ZAPD/genbuildinfo.py</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -158,9 +157,8 @@ python3 ZAPD/genbuildinfo.py</Command>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>cd ..
-mkdir build\ZAPD
-python3 ZAPD/genbuildinfo.py</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
