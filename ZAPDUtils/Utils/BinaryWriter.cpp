@@ -99,3 +99,8 @@ void BinaryWriter::Write(const std::string& str)
 	for (char c : str)
 		stream->WriteByte(c);
 }
+
+void BinaryWriter::Write(char* srcBuffer, size_t length)
+{
+	stream->Write(srcBuffer, length);
+}

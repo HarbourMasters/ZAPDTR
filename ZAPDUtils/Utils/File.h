@@ -5,8 +5,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Directory.h"
+#include "Path.h"
 #include "Utils/StringHelper.h"
+#include "Utils/Directory.h"
+
 
 class File
 {
@@ -60,6 +62,9 @@ public:
 
 	static void WriteAllBytes(const std::string& filePath, const std::vector<char>& data)
 	{
+		if (!Directory::Exists(Path::GetDirectoryName(filePath)))
+			Directory::MakeDirectory(Path::GetDirectoryName(filePath).string());
+
 		std::ofstream file(filePath, std::ios::binary);
 		file.write((char*)data.data(), data.size());
 	};

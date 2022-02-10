@@ -30,6 +30,7 @@ public:
 	void Write(float value);
 	void Write(double value);
 	void Write(const std::string& str);
+	void Write(char* srcBuffer, size_t length);
 
 protected:
 	std::shared_ptr<Stream> stream;

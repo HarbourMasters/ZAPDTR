@@ -14,12 +14,21 @@ namespace fs = std::experimental::filesystem;
 
 #include "StringHelper.h"
 
+#undef GetCurrentDirectory
+#undef CreateDirectory
+
 class Directory
 {
 public:
 	static std::string GetCurrentDirectory() { return fs::current_path().u8string(); }
 
 	static bool Exists(const fs::path& path) { return fs::exists(path); }
+
+	// Stupid hack because of Windows.h
+	static void MakeDirectory(const std::string& path)
+	{
+		CreateDirectory(path);
+	}
 
 	static void CreateDirectory(const std::string& path)
 	{
@@ -42,5 +51,21 @@ public:
 		}
 
 		// fs::create_directory(path);
+	}
+
+	static std::vector<std::string> ListFiles(std::string dir)
+	{
+		std::vector<std::string> lst;
+
+		if (Directory::Exists(dir))
+		{
+			for (auto& p : fs::recursive_directory_iterator(dir))
+			{
+				if (!p.is_directory())
+					lst.push_back(p.path().string());
+			}
+		}
+
+		return lst;
 	}
 };
