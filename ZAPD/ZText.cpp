@@ -36,8 +36,9 @@ void ZText::ParseRawData()
 
 		unsigned char c = rawData[msgPtr];
 		unsigned int extra = 0;
+		bool stop = false;
 
-		while (c != '\0' || extra > 0)
+		while ((c != '\0' && !stop) || extra > 0)
 		{
 			msgEntry.msg += c;
 			msgPtr++;
@@ -49,7 +50,12 @@ void ZText::ParseRawData()
 				{
 					extra = 1;
 				}
-				else if (c == 0x07 || c == 0x12)
+				else if (c == 0x07)
+				{
+					extra = 2;
+					stop = true;
+				}
+				else if (c == 0x12 || c == 0x11)
 				{
 					extra = 2;
 				}
