@@ -109,5 +109,5 @@ public:
 	segptr_t unk_8;  // Gfx*
 
 	std::vector<Struct_800A598C> unk_4_arr;
-	// ZDisplayList* unk_8_dlist = nullptr;
+	ZDisplayList* unk_8_dlist = nullptr;
 };
