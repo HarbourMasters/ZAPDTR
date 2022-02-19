@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "ZDisplayList.h"
 #include "ZResource.h"
 
 // TODO: check if more types exists
