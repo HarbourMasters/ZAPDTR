@@ -6,6 +6,7 @@
 
 #include "ZDisplayList.h"
 #include "ZResource.h"
+#include "ZDisplayList.h"
 
 // TODO: check if more types exists
 enum class ZLimbSkinType
