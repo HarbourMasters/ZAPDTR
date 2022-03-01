@@ -20,7 +20,9 @@ namespace fs = std::experimental::filesystem;
 class Directory
 {
 public:
-	static std::string GetCurrentDirectory() { return fs::current_path().u8string(); }
+	#ifndef PATH_HACK
+	static std::string GetCurrentDirectory() { return fs::current_path().u8string().c_str(); }
+	#endif
 
 	static bool Exists(const fs::path& path) { return fs::exists(path); }
 
