@@ -296,10 +296,10 @@ std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string&
 			{
 				outName = StringHelper::Split(outName, "_room")[0] + "_scene";
 			}
-
-			if (StringHelper::Contains(outName, "_room_") || StringHelper::Contains(outName, "_scene"))
-				prefix = "scenes";
 		}
+
+		if (StringHelper::Contains(outName, "_room_") || StringHelper::Contains(outName, "_scene"))
+			prefix = "scenes";
 
 		if (prefix != "")
 			str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s/%s\"", name.c_str(), prefix.c_str(), outName.c_str(), nameStr.c_str());
