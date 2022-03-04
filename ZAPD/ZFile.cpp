@@ -610,12 +610,6 @@ bool ZFile::AddDeclarationChecks(uint32_t address, const std::string& varName)
 {
 	assert(GETSEGNUM(address) == 0);
 	assert(varName != "");
-#ifdef DEVELOPMENT
-	if (address == 0x0000)
-	{
-		[[maybe_unused]] int32_t bp = 0;
-	}
-#endif
 
 	if (!IsOffsetInFileRange(address))
 	{
