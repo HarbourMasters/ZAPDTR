@@ -1870,6 +1870,12 @@ void ZDisplayList::DeclareReferences(const std::string& prefix)
 				else
 					vtxName = StringHelper::Sprintf("%sVtx_%06X", prefix.c_str(), vtxKeys[i]);
 
+
+				if (StringHelper::Contains(vtxName, "4B18"))
+				{
+					int bp = 0;
+				}
+
 				auto filepath = Globals::Instance->outputPath / vtxName;
 				std::string incStr = StringHelper::Sprintf("%s.%s.inc", filepath.string().c_str(), "vtx");
 
