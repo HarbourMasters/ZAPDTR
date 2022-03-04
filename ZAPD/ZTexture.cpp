@@ -711,10 +711,6 @@ TextureType ZTexture::GetTextureType() const
 
 void ZTexture::Save(const fs::path& outFolder)
 {
-	// Do not save png files if we're making an OTR file. They're not needed...
-	if (Globals::Instance->otrMode)
-		return;
-
 	// Optionally generate text file containing CRC information. This is going to be a one time
 	// process for generating the Texture Pool XML.
 	if (Globals::Instance->outputCrc)
@@ -722,6 +718,10 @@ void ZTexture::Save(const fs::path& outFolder)
 		File::WriteAllText((Globals::Instance->outputPath / (outName + ".txt")).string(),
 		                   StringHelper::Sprintf("%08lX", hash));
 	}
+
+	// Do not save png files if we're making an OTR file. They're not needed...
+	if (Globals::Instance->otrMode)
+		return;
 
 	auto outPath = GetPoolOutPath(outFolder);
 

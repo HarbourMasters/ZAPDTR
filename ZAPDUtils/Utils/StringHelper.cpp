@@ -42,10 +42,16 @@ std::string StringHelper::Replace(std::string str, const std::string& from,
 {
 	size_t start_pos = str.find(from);
 
-	if (start_pos == std::string::npos)
-		return str;
+	while (start_pos != std::string::npos)
+	{
+		str.replace(start_pos, from.length(), to);		
+		start_pos = str.find(from);
+	}
 
-	str.replace(start_pos, from.length(), to);
+	//if (start_pos == std::string::npos)
+		//return str;
+
+	//str.replace(start_pos, from.length(), to);
 	return str;
 }
 
