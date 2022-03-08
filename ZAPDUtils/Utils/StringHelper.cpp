@@ -79,7 +79,7 @@ std::string StringHelper::Sprintf(const char* format, ...)
 	va_list va;
 
 	va_start(va, format);
-	vsprintf(buffer, format, va);
+	vsprintf_s(buffer, format, va);
 	va_end(va);
 
 	output = buffer;
