@@ -55,7 +55,7 @@ public:
 		// fs::create_directory(path);
 	}
 
-	static std::vector<std::string> ListFiles(std::string dir)
+	static std::vector<std::string> ListFiles(const std::string& dir)
 	{
 		std::vector<std::string> lst;
 
