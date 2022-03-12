@@ -1166,8 +1166,10 @@ std::string ZFile::ProcessTextureIntersections([[maybe_unused]] const std::strin
 				else
 					texNextName = nextDecl->varName;
 
+#if 0
 				defines += StringHelper::Sprintf("#define %s ((u32)%s + 0x%06X)\n",
 				                                 texNextName.c_str(), texName.c_str(), offsetDiff);
+#endif
 
 				delete declarations[nextOffset];
 				declarations.erase(nextOffset);
