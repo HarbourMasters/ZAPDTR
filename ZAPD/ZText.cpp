@@ -21,7 +21,7 @@ void ZText::ParseRawData()
 	const auto& rawData = parent->GetRawData();
 	uint32_t currentPtr = StringHelper::StrToL(registeredAttributes.at("CodeOffset").value, 16);
 
-	// TODO: This needs to be more elegant...
+	// OTRTODO: This needs to be more elegant...
 	std::vector<uint8_t> codeData = File::ReadAllBytes(Globals::Instance->baseRomPath.string() + "\\code");
 
 	while (true)
