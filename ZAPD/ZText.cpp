@@ -24,6 +24,11 @@ void ZText::ParseRawData()
 	// OTRTODO: This needs to be more elegant...
 	std::vector<uint8_t> codeData = File::ReadAllBytes(Globals::Instance->baseRomPath.string() + "\\code");
 
+	while (codeData.size() == 0)
+	{
+		codeData = File::ReadAllBytes(Globals::Instance->baseRomPath.string() + "\\code");
+	}
+
 	while (true)
 	{
 		MessageEntry msgEntry;

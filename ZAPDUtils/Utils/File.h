@@ -22,6 +22,10 @@ public:
 	static std::vector<uint8_t> ReadAllBytes(const fs::path& filePath)
 	{
 		std::ifstream file(filePath, std::ios::in | std::ios::binary | std::ios::ate);
+
+		if (!file)
+			return std::vector<uint8_t>();
+
 		int32_t fileSize = (int32_t)file.tellg();
 		file.seekg(0);
 		char* data = new char[fileSize];
