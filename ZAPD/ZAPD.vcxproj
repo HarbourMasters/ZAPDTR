@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props" Condition="Exists('..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props')" />
+  <Import Project="..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props" Condition="Exists('..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -72,12 +72,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\libultraship\libultraship\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\..\OTRExporter\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\libultraship\libultraship\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\ZAPDUtils;$(ProjectDir)..\lib\tinyxml2;$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\lib\elfio;$(ProjectDir)..\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)..\ZAPDUtils;$(ProjectDir)..\lib\tinyxml2;$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\lib\elfio;$(ProjectDir)..\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\libultraship\libultraship\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(OutDir);$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\..\OTRExporter\packages\libpng-v142.1.6.37.2\build\native\lib\x64\v142\Debug\;$(ProjectDir)..\..\libultraship\libultraship\;$(LibraryPath)</LibraryPath>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -336,21 +336,21 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" />
-    <Import Project="..\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" />
-    <Import Project="..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets" Condition="Exists('..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets')" />
-    <Import Project="..\packages\zlib.static.1.2.5\build\native\zlib.static.targets" Condition="Exists('..\packages\zlib.static.1.2.5\build\native\zlib.static.targets')" />
-    <Import Project="..\packages\libpng.static.1.6.37\build\native\libpng.static.targets" Condition="Exists('..\packages\libpng.static.1.6.37\build\native\libpng.static.targets')" />
+    <Import Project="..\..\OTRExporter\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\OTRExporter\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" />
+    <Import Project="..\..\OTRExporter\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\OTRExporter\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" />
+    <Import Project="..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets" Condition="Exists('..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets')" />
+    <Import Project="..\..\OTRExporter\packages\zlib.static.1.2.5\build\native\zlib.static.targets" Condition="Exists('..\..\OTRExporter\packages\zlib.static.1.2.5\build\native\zlib.static.targets')" />
+    <Import Project="..\..\OTRExporter\packages\libpng.static.1.6.37\build\native\libpng.static.targets" Condition="Exists('..\..\OTRExporter\packages\libpng.static.1.6.37\build\native\libpng.static.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
-    <Error Condition="!Exists('..\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
-    <Error Condition="!Exists('..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props'))" />
-    <Error Condition="!Exists('..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets'))" />
-    <Error Condition="!Exists('..\packages\zlib.static.1.2.5\build\native\zlib.static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib.static.1.2.5\build\native\zlib.static.targets'))" />
-    <Error Condition="!Exists('..\packages\libpng.static.1.6.37\build\native\libpng.static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng.static.1.6.37\build\native\libpng.static.targets'))" />
+    <Error Condition="!Exists('..\..\OTRExporter\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\OTRExporter\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
+    <Error Condition="!Exists('..\..\OTRExporter\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\OTRExporter\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
+    <Error Condition="!Exists('..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.props'))" />
+    <Error Condition="!Exists('..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\OTRExporter\packages\YY.NuGet.Import.Helper.1.0.0.4\build\native\YY.NuGet.Import.Helper.targets'))" />
+    <Error Condition="!Exists('..\..\OTRExporter\packages\zlib.static.1.2.5\build\native\zlib.static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\OTRExporter\packages\zlib.static.1.2.5\build\native\zlib.static.targets'))" />
+    <Error Condition="!Exists('..\..\OTRExporter\packages\libpng.static.1.6.37\build\native\libpng.static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\OTRExporter\packages\libpng.static.1.6.37\build\native\libpng.static.targets'))" />
   </Target>
 </Project>
