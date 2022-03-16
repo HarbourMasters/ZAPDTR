@@ -298,8 +298,22 @@ std::string ZResource::GetSourceOutputHeader([[maybe_unused]] const std::string&
 			}
 		}
 
+		std::string xmlPath = StringHelper::Replace(parent->GetXmlFilePath().string(), "\\", "/");
+
 		if (StringHelper::Contains(outName, "_room_") || StringHelper::Contains(outName, "_scene"))
 			prefix = "scenes";
+		else if (StringHelper::Contains(xmlPath, "objects/"))
+			prefix = "objects";
+		else if (StringHelper::Contains(xmlPath, "textures/"))
+			prefix = "textures";
+		else if (StringHelper::Contains(xmlPath, "overlays/"))
+			prefix = "overlays";
+		else if (StringHelper::Contains(xmlPath, "misc/"))
+			prefix = "misc";
+		else if (StringHelper::Contains(xmlPath, "code/"))
+			prefix = "code";
+		else if (StringHelper::Contains(xmlPath, "text/"))
+			prefix = "text";
 
 		if (prefix != "")
 			str += StringHelper::Sprintf("#define %s \"__OTR__%s/%s/%s\"", name.c_str(), prefix.c_str(), outName.c_str(), nameStr.c_str());

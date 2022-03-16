@@ -17,6 +17,7 @@ REGISTER_ZFILENODE(LegacyAnimation, ZLegacyAnimation);
 ZAnimation::ZAnimation(ZFile* nParent) : ZResource(nParent)
 {
 	frameCount = 0;
+	genOTRDef = true;
 }
 
 void ZAnimation::ParseRawData()
@@ -26,6 +27,7 @@ void ZAnimation::ParseRawData()
 	frameCount = BitConverter::ToInt16BE(parent->GetRawData(), rawDataIndex + 0);
 }
 
+/*
 std::string ZAnimation::GetSourceOutputHeader(const std::string& prefix)
 {
 	if (Globals::Instance->otrMode)
@@ -38,6 +40,7 @@ std::string ZAnimation::GetSourceOutputHeader(const std::string& prefix)
 	else
 		return ZResource::GetSourceOutputHeader(prefix);
 }
+*/
 
 ZResourceType ZAnimation::GetResourceType() const
 {

@@ -23,7 +23,7 @@ public:
 
 	ZAnimation(ZFile* nParent);
 
-	std::string GetSourceOutputHeader(const std::string& prefix) override;
+	//std::string GetSourceOutputHeader(const std::string& prefix) override;
 	ZResourceType GetResourceType() const override;
 
 protected:
