@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{65608eb0-1a47-45ad-ab66-192fb64c762c}</ProjectGuid>
-    <RootNamespace>ExporterTest</RootNamespace>
+    <ProjectGuid>{a2e01c3e-d647-45d1-9788-043debc1a908}</ProjectGuid>
+    <RootNamespace>ZAPDUtils</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>ExporterExample</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -44,7 +43,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -79,7 +78,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\ZAPD\;$(ProjectDir)..\ZAPDUtils;$(ProjectDir)..\lib\tinyxml2;$(ProjectDir)..\lib\libgfxd;$(ProjectDir)..\lib\elfio;$(ProjectDir)..\lib\stb;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -116,11 +114,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc11</LanguageStandard_C>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,15 +141,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CollisionExporter.h" />
-    <ClInclude Include="TextureExporter.h" />
-    <ClInclude Include="RoomExporter.h" />
+    <ClInclude Include="Color3b.h" />
+    <ClInclude Include="StrHash.h" />
+    <ClInclude Include="Utils\BinaryReader.h" />
+    <ClInclude Include="Utils\BinaryWriter.h" />
+    <ClInclude Include="Utils\BitConverter.h" />
+    <ClInclude Include="Utils\Directory.h" />
+    <ClInclude Include="Utils\File.h" />
+    <ClInclude Include="Utils\MemoryStream.h" />
+    <ClInclude Include="Utils\Path.h" />
+    <ClInclude Include="Utils\Stream.h" />
+    <ClInclude Include="Utils\StringHelper.h" />
+    <ClInclude Include="Vec2f.h" />
+    <ClInclude Include="Vec3f.h" />
+    <ClInclude Include="Vec3s.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CollisionExporter.cpp" />
-    <ClCompile Include="TextureExporter.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="RoomExporter.cpp" />
+    <ClCompile Include="..\lib\tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="Utils\BinaryReader.cpp" />
+    <ClCompile Include="Utils\BinaryWriter.cpp" />
+    <ClCompile Include="Utils\MemoryStream.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
