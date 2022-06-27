@@ -290,6 +290,8 @@ void ZLimbTable::ParseRawData()
 
 	const auto& rawData = parent->GetRawData();
 	uint32_t ptr = rawDataIndex;
+
+	limbsAddresses.reserve(count);
 	for (size_t i = 0; i < count; i++)
 	{
 		limbsAddresses.push_back(BitConverter::ToUInt32BE(rawData, ptr));
@@ -304,7 +306,7 @@ void ZLimbTable::DeclareReferences(const std::string& prefix)
 		varPrefix = prefix;
 
 	ZResource::DeclareReferences(varPrefix);
-
+	limbsReferences.reserve(count);
 	for (size_t i = 0; i < count; i++)
 	{
 		segptr_t limbAddress = limbsAddresses[i];

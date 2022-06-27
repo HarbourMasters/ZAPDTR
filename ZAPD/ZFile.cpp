@@ -441,7 +441,8 @@ ZResource* ZFile::FindResource(offset_t rawDataIndex)
 std::vector<ZResource*> ZFile::GetResourcesOfType(ZResourceType resType)
 {
 	std::vector<ZResource*> resList;
-
+	resList.reserve(resources.size());
+	
 	for (ZResource* res : resources)
 	{
 		if (res->GetResourceType() == resType)
@@ -1239,6 +1240,7 @@ void ZFile::HandleUnaccountedData()
 	if (Globals::Instance->otrMode)
 		return;
 
+	declsAddresses.reserve(declarations.size());
 	for (const auto& item : declarations)
 	{
 		declsAddresses.push_back(item.first);
