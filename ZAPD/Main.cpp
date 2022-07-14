@@ -10,15 +10,7 @@
 #include "ZFile.h"
 #include "ZTexture.h"
 
-#ifdef __linux__
-#include <csignal>
-#include <cstdlib>
-#include <ctime>
-#include <cxxabi.h>  // for __cxa_demangle
-#include <dlfcn.h>   // for dladdr
-#include <execinfo.h>
-#include <unistd.h>
-#endif
+#include "CrashHandler.h"
 
 #include <string>
 #include <string_view>
@@ -52,7 +44,6 @@ void DebugConsole_LoadCVars()
 
 }
 
-
 bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path& outPath,
            ZFileMode fileMode, int workerID);
 
@@ -61,65 +52,9 @@ void BuildAssetBackground(const fs::path& imageFilePath, const fs::path& outPath
 void BuildAssetBlob(const fs::path& blobFilePath, const fs::path& outPath);
 int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileMode fileMode);
 
-volatile int numWorkersLeft = 0;
+extern const char gBuildHash[];
 
-#ifdef __linux__
-#define ARRAY_COUNT(arr) (sizeof(arr) / sizeof(arr[0]))
-void ErrorHandler(int sig)
-{
-	void* array[4096];
-	const size_t nMaxFrames = sizeof(array) / sizeof(array[0]);
-	size_t size = backtrace(array, nMaxFrames);
-	char** symbols = backtrace_symbols(array, nMaxFrames);
-
-	fprintf(stderr, "\nZAPD crashed. (Signal: %i)\n", sig);
-
-	// Feel free to add more crash messages.
-	const char* crashEasterEgg[] = {
-		"\tYou've met with a terrible fate, haven't you?",
-		"\tSEA BEARS FOAM. SLEEP BEARS DREAMS. \n\tBOTH END IN THE SAME WAY: CRASSSH!",
-		"\tZAPD has fallen and cannot get up.",
-	};
-
-	srand(time(nullptr));
-	auto easterIndex = rand() % ARRAY_COUNT(crashEasterEgg);
-
-	fprintf(stderr, "\n%s\n\n", crashEasterEgg[easterIndex]);
-
-	fprintf(stderr, "Traceback:\n");
-	for (size_t i = 1; i < size; i++)
-	{
-		Dl_info info;
-		uint32_t gotAddress = dladdr(array[i], &info);
-		std::string functionName(symbols[i]);
-
-		if (gotAddress != 0 && info.dli_sname != nullptr)
-		{
-			int32_t status;
-			char* demangled = abi::__cxa_demangle(info.dli_sname, nullptr, nullptr, &status);
-			const char* nameFound = info.dli_sname;
-
-			if (status == 0)
-			{
-				nameFound = demangled;
-			}
-
-			functionName = StringHelper::Sprintf("%s (+0x%X)", nameFound,
-			                                     (char*)array[i] - (char*)info.dli_saddr);
-			free(demangled);
-		}
-
-		fprintf(stderr, "%-3zd %s\n", i, functionName.c_str());
-	}
-
-	fprintf(stderr, "\n");
-
-	free(symbols);
-	exit(1);
-}
-#endif
-
-int main(int argc, char* argv[])
+int Main(int argc, char* argv[])
 {
 	// Syntax: ZAPD.out [mode (btex/bovl/e)] (Arbritrary Number of Arguments)
 
@@ -221,13 +156,13 @@ int main(int argc, char* argv[])
 		}
 		else if (arg == "-eh")  // Enable Error Handler
 		{
-#ifdef __linux__
+#if defined(__linux__)
 			signal(SIGSEGV, ErrorHandler);
 			signal(SIGABRT, ErrorHandler);
-#else
-			// HANDLE_WARNING(WarningType::Always,
-			//                "tried to set error handler, but this ZAPD build lacks support for one",
-			//                "");
+#elif !defined(_MSC_VER)
+			HANDLE_WARNING(WarningType::Always,
+			               "tried to set error handler, but this ZAPD build lacks support for one",
+			               "");
 #endif
 
 
@@ -483,6 +418,21 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 		numWorkersLeft--;
 	}
 	return 0;
+// Windows doesn't make it easy to get a stack trace from just a signal. So we need to do this messy
+// stuf for just windows.
+int main(int argc, char* argv[])
+{
+#ifdef _MSC_VER
+	__try
+	{
+		return Main(argc, argv);
+	}
+	__except (seh_filter(GetExceptionInformation()))
+	{
+	}
+#else
+	return Main(argc, argv);
+#endif
 }
 
 bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path& outPath,
