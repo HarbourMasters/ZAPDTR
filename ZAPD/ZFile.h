@@ -34,7 +34,6 @@ public:
 	std::map<offset_t, Declaration*> declarations;
 	std::vector<ZResource*> resources;
 	std::string defines;
-	std::string customGuard;
 
 	int workerID;
 
