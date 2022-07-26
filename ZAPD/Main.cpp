@@ -156,7 +156,7 @@ int Main(int argc, char* argv[])
 		}
 		else if (arg == "-eh")  // Enable Error Handler
 		{
-#if defined(__linux__)
+#if HAS_POSIX == 1
 			signal(SIGSEGV, ErrorHandler);
 			signal(SIGABRT, ErrorHandler);
 #elif !defined(_MSC_VER)
@@ -419,7 +419,7 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 	}
 	return 0;
 // Windows doesn't make it easy to get a stack trace from just a signal. So we need to do this messy
-// stuf for just windows.
+// stuff for just windows.
 int main(int argc, char* argv[])
 {
 #ifdef _MSC_VER
