@@ -52,7 +52,7 @@ void ZCollisionHeader::ParseRawData()
 	vertices.reserve(numVerts);
 	polygons.reserve(numPolygons);
 
-	uint32_t currentPtr = vtxSegmentOffset;
+	offset_t currentPtr = vtxSegmentOffset;
 
 	for (uint16_t i = 0; i < numVerts; i++)
 	{
@@ -73,14 +73,21 @@ void ZCollisionHeader::ParseRawData()
 
 	uint16_t highestPolyType = 0;
 
-	for (ZCollisionPoly poly : polygons)
+	for (const ZCollisionPoly& poly : polygons)
 	{
 		if (poly.type > highestPolyType)
 			highestPolyType = poly.type;
 	}
+
 	for (uint16_t i = 0; i < highestPolyType + 1; i++)
-		polygonTypes.push_back(
-			BitConverter::ToUInt64BE(rawData, polyTypeDefSegmentOffset + (i * 8)));
+	{
+		ZSurfaceType surfaceType(parent);
+		surfaceType.SetRawDataIndex(polyTypeDefSegmentOffset + (i * 8));
+		surfaceType.ParseRawData();
+		polygonTypes.push_back(surfaceType);
+	}
+	// polygonTypes.push_back(
+	//	BitConverter::ToUInt64BE(rawData, polyTypeDefSegmentOffset + (i * 8)));
 
 	if (camDataAddress != SEGMENTED_NULL)
 	{
@@ -169,21 +176,15 @@ void ZCollisionHeader::DeclareReferences(const std::string& prefix)
 	}
 
 	declaration.clear();
-	if (!Globals::Instance->otrMode)
+	for (const auto& polyType : polygonTypes)
 	{
-		for (size_t i = 0; i < polygonTypes.size(); i++)
-		{
-			declaration += StringHelper::Sprintf("\t{ 0x%08lX, 0x%08lX },", polygonTypes[i] >> 32,
-			                                     polygonTypes[i] & 0xFFFFFFFF);
-
-			if (i < polygonTypes.size() - 1)
-				declaration += "\n";
-		}
+		declaration += StringHelper::Sprintf("\t%s,", polyType.GetBodySourceCode().c_str());
 	}
 
-	if (polyTypeDefAddress != 0)
+	if (polyTypeDefAddress != SEGMENTED_NULL)
 		parent->AddDeclarationArray(polyTypeDefSegmentOffset, DeclarationAlignment::Align4,
-		                            polygonTypes.size() * 8, "SurfaceType",
+		                            polygonTypes.size() * 8,
+		                            polygonTypes[0].GetSourceTypeName().c_str(),
 		                            StringHelper::Sprintf("%sSurfaceType", auxName.c_str()),
 		                            polygonTypes.size(), declaration);
 
