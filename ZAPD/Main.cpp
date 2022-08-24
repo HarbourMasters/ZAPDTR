@@ -1,5 +1,4 @@
 #include "Globals.h"
-#include "Overlays/ZOverlay.h"
 #include "Utils/Directory.h"
 #include "Utils/File.h"
 #include "Utils/Path.h"
@@ -140,16 +139,6 @@ int Main(int argc, char* argv[])
 		{
 			Globals::Instance->texType = ZTexture::GetTextureTypeFromString(argv[++i]);
 		}
-		else if (arg == "-cfg")  // Set cfg path (for overlays)
-		                         // TODO: Change the name of this to something else so it doesn't
-		                         // get confused with XML config files.
-		{
-			Globals::Instance->cfgPath = argv[++i];
-		}
-		else if (arg == "-fl")  // Set baserom filelist path
-		{
-			Globals::Instance->fileListPath = argv[++i];
-		}
 		else if (arg == "-rconf")  // Read Config File
 		{
 			Globals::Instance->cfg.ReadConfigFile(argv[++i]);
@@ -206,8 +195,6 @@ int Main(int argc, char* argv[])
 		fileMode = ZFileMode::BuildTexture;
 	else if (buildMode == "bren")
 		fileMode = ZFileMode::BuildBackground;
-	else if (buildMode == "bovl")
-		fileMode = ZFileMode::BuildOverlay;
 	else if (buildMode == "bsf")
 		fileMode = ZFileMode::BuildSourceFile;
 	else if (buildMode == "bblb")
