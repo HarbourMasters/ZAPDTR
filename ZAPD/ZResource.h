@@ -26,6 +26,7 @@ class ZFile;
 enum class ZResourceType
 {
 	Error,
+	ActorList,
 	Animation,
 	Array,
 	AltHeader,
