@@ -224,7 +224,9 @@ void ZFile::ParseXML(tinyxml2::XMLElement* reader, const std::string& filename)
 			std::string offsetStr = StringHelper::Split(offsetXml, "0x")[1];
 			if (!StringHelper::HasOnlyHexDigits(offsetStr))
 			{
-				HANDLE_ERROR(WarningType::InvalidXML, StringHelper::Sprintf("Invalid offset %s entered", offsetStr.c_str()), "");
+				HANDLE_ERROR(WarningType::InvalidXML,
+				             StringHelper::Sprintf("Invalid offset %s entered", offsetStr.c_str()),
+				             "");
 			}
 			rawDataIndex = strtol(offsetStr.c_str(), NULL, 16);
 
@@ -447,7 +449,7 @@ std::vector<ZResource*> ZFile::GetResourcesOfType(ZResourceType resType)
 {
 	std::vector<ZResource*> resList;
 	resList.reserve(resources.size());
-	
+
 	for (ZResource* res : resources)
 	{
 		if (res->GetResourceType() == resType)
