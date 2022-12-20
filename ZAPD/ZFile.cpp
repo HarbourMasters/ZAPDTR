@@ -222,7 +222,7 @@ void ZFile::ParseXML(tinyxml2::XMLElement* reader, const std::string& filename)
 		if (offsetXml != nullptr)
 		{
 			std::string offsetStr = StringHelper::Split(offsetXml, "0x")[1];
-			if (!StringHelper::HasOnlyHexDigits(offsetStr))
+			if (0)
 			{
 				HANDLE_ERROR(WarningType::InvalidXML,
 				             StringHelper::Sprintf("Invalid offset %s entered", offsetStr.c_str()),
@@ -807,8 +807,12 @@ void ZFile::GenerateSourceFiles()
 void ZFile::GenerateSourceHeaderFiles()
 {
 	OutputFormatter formatter;
+	std::string guard = outName.stem().string();
 
-	formatter.Write("#pragma once\n");
+	std::transform(guard.begin(), guard.end(), guard.begin(), ::toupper);
+
+	formatter.Write(
+		StringHelper::Sprintf("#ifndef %s_H\n#define %s_H 1\n\n", guard.c_str(), guard.c_str()));
 	std::set<std::string> nameSet;
 	for (ZResource* res : resources)
 	{
