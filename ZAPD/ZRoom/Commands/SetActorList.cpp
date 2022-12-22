@@ -44,6 +44,7 @@ std::string SetActorList::GetBodySourceCode() const
 	std::string listName;
 	Globals::Instance->GetSegmentedPtrName(cmdArg2, parent, "ActorEntry", listName,
 	                                       parent->workerID);
+
 	return StringHelper::Sprintf("SCENE_CMD_ACTOR_LIST(%i, %s)", numActors, listName.c_str());
 }
 
