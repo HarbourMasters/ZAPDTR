@@ -308,7 +308,7 @@ size_t ZCollisionHeader::GetRawDataSize() const
 {
 	return 44;
 }
-
+#if 0
 WaterBoxHeader::WaterBoxHeader(const std::vector<uint8_t>& rawData, uint32_t rawDataIndex)
 {
 	xMin = BitConverter::ToInt16BE(rawData, rawDataIndex + 0);
@@ -328,7 +328,7 @@ std::string WaterBoxHeader::GetBodySourceCode() const
 	return StringHelper::Sprintf("%i, %i, %i, %i, %i, 0x%08X", xMin, ySurface, zMin, xLength,
 	                             zLength, properties);
 }
-
+#endif
 CameraDataList::CameraDataList(ZFile* parent, const std::string& prefix,
                                const std::vector<uint8_t>& rawData, offset_t rawDataIndex,
                                offset_t upperCameraBoundary)
@@ -436,11 +436,11 @@ CameraDataList::CameraDataList(ZFile* parent, const std::string& prefix,
 
 CameraDataList::~CameraDataList()
 {
-	for (auto entry : entries)
-		delete entry;
-
-	for (auto camPosData : cameraPositionData)
-		delete camPosData;
+	//for (auto entry : entries)
+	//	delete entry;
+//
+	//for (auto camPosData : cameraPositionData)
+	//	delete camPosData;
 }
 
 CameraPositionData::CameraPositionData(const std::vector<uint8_t>& rawData, uint32_t rawDataIndex)

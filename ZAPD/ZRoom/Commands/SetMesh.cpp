@@ -597,7 +597,7 @@ void RoomShapeCullable::DeclareReferences(const std::string& prefix)
 std::string RoomShapeCullable::GetBodySourceCode() const
 {
 	std::string listName;
-	Globals::Instance->GetSegmentedPtrName(start, parent, "", listName);
+	Globals::Instance->GetSegmentedPtrName(start, parent, "", listName, 0, true);
 
 	std::string body = StringHelper::Sprintf("\n    %i, %i,\n", type, polyDLists.size());
 	body += StringHelper::Sprintf("    %s,\n", listName.c_str());

@@ -10,6 +10,12 @@
 #include "Utils/Path.h"
 #include "WarningHandler.h"
 
+// OTRTODO put in LUS
+
+#define ALIGN8(val) (((val) + 7) & ~7)
+#define ALIGN16(val) (((val) + 0xF) & ~0xF)
+#define ALIGN64(val) (((val) + 0x3F) & ~0x3F)
+
 REGISTER_ZFILENODE(Texture, ZTexture);
 
 ZTexture::ZTexture(ZFile* nParent) : ZResource(nParent)
@@ -871,6 +877,8 @@ std::string ZTexture::GetBodySourceCode() const
 
 std::string ZTexture::GetHeaderDefines() const
 {
+	// OTRTODO add to LUS
+	#if 0
 	std::string definePrefix = StringHelper::camelCaseTo_SCREAMING_SNAKE_CASE(name.c_str(), true);
 	std::string ret = StringHelper::Sprintf("#define %s_WIDTH %d\n", definePrefix.c_str(), width);
 
@@ -878,6 +886,8 @@ std::string ZTexture::GetHeaderDefines() const
 	ret += StringHelper::Sprintf("#define %s_SIZE 0x%zX\n", definePrefix.c_str(), GetRawDataSize());
 
 	return ret;
+	#endif
+	return "";
 }
 
 bool ZTexture::IsExternalResource() const

@@ -1,7 +1,7 @@
 #include "Globals.h"
-#include "Utils/Directory.h"
-#include "Utils/File.h"
-#include "Utils/Path.h"
+#include <Utils/DiskFile.h>
+#include <Utils/Path.h>
+#include <Utils/Directory.h>
 #include "WarningHandler.h"
 
 // Linker Hacks Begin
@@ -103,6 +103,9 @@ void Arg_SetExporter(int& i, char* argv[]);
 void Arg_EnableGCCCompat(int& i, char* argv[]);
 void Arg_ForceStatic(int& i, char* argv[]);
 void Arg_ForceUnaccountedStatic(int& i, char* argv[]);
+void Arg_SetFileListPath(int& i, char* argv[]);
+void Arg_SetBuildRawTexture(int& i, char* argv[]);
+void Arg_SetNoRomMode(int& i, char* argv[]);
 
 int main(int argc, char* argv[]);
 
@@ -405,6 +408,9 @@ void ParseArgs(int& argc, char* argv[])
 		{"--static", &Arg_ForceStatic},
 		{"-us", &Arg_ForceUnaccountedStatic},
 		{"--unaccounted-static", &Arg_ForceUnaccountedStatic},
+		{"-fl", &Arg_SetFileListPath},
+		{"-brt", &Arg_SetBuildRawTexture},
+		{"--norom", &Arg_SetNoRomMode},
 	};
 
 	for (int32_t i = 2; i < argc; i++)
@@ -421,6 +427,9 @@ void ParseArgs(int& argc, char* argv[])
 		if (it == ArgFuncDictionary.end())
 		{
 			fprintf(stderr, "Unsupported argument: %s\n", arg.c_str());
+			ExporterSet* exporterSet = Globals::Instance->GetExporterSet();
+			if (exporterSet != nullptr)
+				exporterSet->parseArgsFunc(argc, argv, i);
 			continue;
 		}
 
@@ -442,6 +451,8 @@ ZFileMode ParseFileMode(const std::string& buildMode, ExporterSet* exporterSet)
 		fileMode = ZFileMode::BuildBlob;
 	else if (buildMode == "e")
 		fileMode = ZFileMode::Extract;
+	else if (buildMode == "ed")
+		fileMode = ZFileMode::ExtractDirectory;
 	else if (exporterSet != nullptr && exporterSet->parseFileModeFunc != nullptr)
 		exporterSet->parseFileModeFunc(buildMode, fileMode);
 
@@ -545,6 +556,21 @@ void Arg_ForceUnaccountedStatic([[maybe_unused]] int& i, [[maybe_unused]] char* 
 	Globals::Instance->forceUnaccountedStatic = true;
 }
 
+void Arg_SetFileListPath(int& i,  char* argv[])
+{
+	Globals::Instance->fileListPath = argv[++i];
+}
+
+void Arg_SetBuildRawTexture([[maybe_unused]] int& i, [[maybe_unused]] char* argv[])
+{
+	Globals::Instance->buildRawTexture = true;
+}
+
+void Arg_SetNoRomMode([[maybe_unused]] int& i, [[maybe_unused]] char* argv[])
+{
+	Globals::Instance->onlyGenSohOtr = true;
+}
+
 int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet)
 {
 	bool procFileModeSuccess = false;
@@ -565,14 +591,14 @@ int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet)
 				printf("Parsing external file from config: '%s'\n", externalXmlFilePath.c_str());
 
 			parseSuccessful = Parse(externalXmlFilePath, Globals::Instance->baseRomPath,
-			                        extFile.outPath, ZFileMode::ExternalFile);
+			                        extFile.outPath, ZFileMode::ExternalFile, 0);
 
 			if (!parseSuccessful)
 				return 1;
 		}
 
 		parseSuccessful = Parse(Globals::Instance->inputPath, Globals::Instance->baseRomPath,
-		                        Globals::Instance->outputPath, fileMode);
+		                        Globals::Instance->outputPath, fileMode, 0);
 		if (!parseSuccessful)
 			return 1;
 	}

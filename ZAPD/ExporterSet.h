@@ -5,8 +5,9 @@ typedef bool (*ExporterSetFuncBool)(ZFileMode fileMode);
 typedef void (*ExporterSetFuncVoid)(int argc, char* argv[], int& i);
 typedef void (*ExporterSetFuncVoid2)(const std::string& buildMode, ZFileMode& fileMode);
 typedef void (*ExporterSetFuncVoid3)();
+typedef void (*ExporterSetFuncVoid4)(tinyxml2::XMLElement* reader);
 typedef void (*ExporterSetResSave)(ZResource* res, BinaryWriter& writer);
-
+//processCompilableFunc
 class ExporterSet
 {
 public:
@@ -21,4 +22,6 @@ public:
 	ExporterSetFuncVoid3 beginXMLFunc = nullptr;
 	ExporterSetFuncVoid3 endXMLFunc = nullptr;
 	ExporterSetResSave resSaveFunc = nullptr;
+	ExporterSetFuncVoid3 endProgramFunc = nullptr;
+	ExporterSetFuncVoid4 processCompilableFunc = nullptr;
 };

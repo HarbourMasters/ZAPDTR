@@ -5,6 +5,8 @@
 #include <vector>
 #include "GameConfig.h"
 #include "ZFile.h"
+#include "ZRom.h"
+#include "FileWorker.h"
 #include "ExporterSet.h"
 
 class ZRoom;

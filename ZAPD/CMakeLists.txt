@@ -42,9 +42,10 @@ set(Header_Files__Yaz0
 source_group("Header Files\\Yaz0" FILES ${Header_Files__Yaz0})
 
 set(Header_Files__Z64
-    "OtherStructs/SkinLimbStructs.h"
+    "OtherStructs/Cutscene_Common.h"
     "OtherStructs/CutsceneMM_Commands.h"
-    "OtherStructs/Cutscene_Commands.h"
+    "OtherStructs/CutsceneOoT_Commands.h"
+    "OtherStructs/SkinLimbStructs.h"
     "ZAnimation.h"
     "ZActorList.h"
     "ZArray.h"
@@ -71,6 +72,7 @@ set(Header_Files__Z64
     "ZTexture.h"
     "ZTextureAnimation.h"
     "ZVector.h"
+    "ZWaterbox.h"
     "ZVtx.h"
 )
 source_group("Header Files\\Z64" FILES ${Header_Files__Z64})
@@ -83,7 +85,6 @@ source_group("Header Files\\Z64\\ZRoom" FILES ${Header_Files__Z64__ZRoom})
 
 set(Header_Files__Z64__ZRoom__Commands
     "ZRoom/Commands/EndMarker.h"
-    "ZRoom/Commands/SetActorCutsceneList.h"
     "ZRoom/Commands/SetActorList.h"
     "ZRoom/Commands/SetAlternateHeaders.h"
     "ZRoom/Commands/SetAnimatedMaterialList.h"
@@ -91,6 +92,7 @@ set(Header_Files__Z64__ZRoom__Commands
     "ZRoom/Commands/SetCollisionHeader.h"
     "ZRoom/Commands/SetCsCamera.h"
     "ZRoom/Commands/SetCutscenes.h"
+    "ZRoom/Commands/SetCutsceneEntryList.cpp"
     "ZRoom/Commands/SetEchoSettings.h"
     "ZRoom/Commands/SetEntranceList.h"
     "ZRoom/Commands/SetExitList.h"
@@ -153,9 +155,10 @@ set(Source_Files__Yaz0
 source_group("Source Files\\Yaz0" FILES ${Source_Files__Yaz0})
 
 set(Source_Files__Z64
-    "OtherStructs/SkinLimbStructs.cpp"
+    "OtherStructs/Cutscene_Common.cpp"
     "OtherStructs/CutsceneMM_Commands.cpp"
-    "OtherStructs/Cutscene_Commands.cpp"
+    "OtherStructs/CutsceneOoT_Commands.cpp"
+    "OtherStructs/SkinLimbStructs.cpp"
     "ZAnimation.cpp"
     "ZActorList.cpp"
     "ZArray.cpp"
@@ -183,6 +186,7 @@ set(Source_Files__Z64
     "ZTexture.cpp"
     "ZTextureAnimation.cpp"
     "ZVector.cpp"
+    "ZWaterbox.cpp"
     "ZVtx.cpp"
 )
 source_group("Source Files\\Z64" FILES ${Source_Files__Z64})
@@ -195,7 +199,6 @@ source_group("Source Files\\Z64\\ZRoom" FILES ${Source_Files__Z64__ZRoom})
 
 set(Source_Files__Z64__ZRoom__Commands
     "ZRoom/Commands/EndMarker.cpp"
-    "ZRoom/Commands/SetActorCutsceneList.cpp"
     "ZRoom/Commands/SetActorList.cpp"
     "ZRoom/Commands/SetAlternateHeaders.cpp"
     "ZRoom/Commands/SetAnimatedMaterialList.cpp"
@@ -203,6 +206,7 @@ set(Source_Files__Z64__ZRoom__Commands
     "ZRoom/Commands/SetCollisionHeader.cpp"
     "ZRoom/Commands/SetCsCamera.cpp"
     "ZRoom/Commands/SetCutscenes.cpp"
+    "ZRoom/Commands/SetCutsceneEntryList.cpp"
     "ZRoom/Commands/SetEchoSettings.cpp"
     "ZRoom/Commands/SetEntranceList.cpp"
     "ZRoom/Commands/SetExitList.cpp"
