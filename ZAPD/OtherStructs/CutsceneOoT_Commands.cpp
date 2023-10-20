@@ -64,13 +64,19 @@ std::string CutsceneOoTSubCommandEntry_GenericCmd::GetBodySourceCode() const
 			bool baseOne = (commandId == CutsceneOoT_CommandType::CS_CMD_LIGHT_SETTING ||
 			                commandId == CutsceneOoT_CommandType::CS_CMD_START_SEQ ||
 			                commandId == CutsceneOoT_CommandType::CS_CMD_STOP_SEQ);
-			return StringHelper::Sprintf(entryFmt.c_str(), baseOne ? base - 1 : base, startFrame,
-			                             endFrame, pad, unused1, unused2, unused3, unused4, unused5,
-			                             unused6, unused7, unused8, unused9, unused10);
+			
+			return StringHelper::Sprintf(entryFmt.c_str(), firstArg.c_str(), startFrame, endFrame,
+			                             pad, unused1, unused2, unused3, unused4, unused5, unused6,
+			                             unused7, unused8, unused9, unused10);
+			
+			//return StringHelper::Sprintf(entryFmt.c_str(), baseOne ? base - 1 : base, startFrame,
+			                             //endFrame, pad, unused1, unused2, unused3, unused4, unused5,
+			                             //unused6, unused7, unused8, unused9, unused10);
 		}
-		return StringHelper::Sprintf(entryFmt.c_str(), firstArg.c_str(), startFrame, endFrame, pad,
-		                             unused1, unused2, unused3, unused4, unused5, unused6, unused7,
-		                             unused8, unused9, unused10);
+
+		//return StringHelper::Sprintf(entryFmt.c_str(), firstArg.c_str(), startFrame, endFrame, pad,
+		                             //unused1, unused2, unused3, unused4, unused5, unused6, unused7,
+		                             //unused8, unused9, unused10);
 	}
 	return StringHelper::Sprintf("CS_UNK_DATA(0x%08X, 0x%08X, 0x%08X, 0x%08X, 0x%08X, 0x%08X, "
 	                             "0x%08X, 0x%08X, 0x%08X, 0x%08X, 0x%08X, 0x%08X)",

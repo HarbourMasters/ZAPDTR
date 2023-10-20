@@ -208,6 +208,9 @@ extern "C" int zapd_main(int argc, char* argv[])
 	else if (fileMode == ZFileMode::BuildBlob)
 		BuildAssetBlob(Globals::Instance->inputPath, Globals::Instance->outputPath);
 
+	if (exporterSet != nullptr && exporterSet->endProgramFunc != nullptr)
+		exporterSet->endProgramFunc();
+
 	delete g;
 	return returnCode;
 }
@@ -538,6 +541,7 @@ void Arg_VerboseUnaccounted([[maybe_unused]] int& i, [[maybe_unused]] char* argv
 
 void Arg_SetExporter(int& i, char* argv[])
 {
+	ImportExporters();
 	Globals::Instance->currentExporter = argv[++i];
 }
 
@@ -584,23 +588,72 @@ int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet)
 
 		for (auto& extFile : Globals::Instance->cfg.externalFiles)
 		{
-			fs::path externalXmlFilePath =
-				Globals::Instance->cfg.externalXmlFolder / extFile.xmlPath;
+			if (fileMode == ZFileMode::ExtractDirectory)
+			{
+				std::vector<std::string> fileList =
+					Directory::ListFiles(Globals::Instance->inputPath.string());
 
-			if (Globals::Instance->verbosity >= VerbosityLevel::VERBOSITY_INFO)
-				printf("Parsing external file from config: '%s'\n", externalXmlFilePath.c_str());
+				const int num_threads = std::thread::hardware_concurrency();
+				ctpl::thread_pool pool(num_threads > 1 ? num_threads / 2 : 1);
 
-			parseSuccessful = Parse(externalXmlFilePath, Globals::Instance->baseRomPath,
-			                        extFile.outPath, ZFileMode::ExternalFile, 0);
+				bool parseSuccessful;
 
-			if (!parseSuccessful)
-				return 1;
+				auto start = std::chrono::steady_clock::now();
+				int fileListSize = fileList.size();
+				Globals::Instance->singleThreaded = false;
+
+				for (int i = 0; i < fileListSize; i++)
+					Globals::Instance->workerData[i] = new FileWorker();
+
+				numWorkersLeft = fileListSize;
+
+				for (int i = 0; i < fileListSize; i++)
+				{
+					if (Globals::Instance->singleThreaded)
+					{
+						ExtractFunc(i, fileList.size(), fileList[i], fileMode);
+					}
+					else
+					{
+						std::string fileListItem = fileList[i];
+						pool.push([i, fileListSize, fileListItem, fileMode](int) {
+							ExtractFunc(i, fileListSize, fileListItem, fileMode);
+						});
+					}
+				}
+
+				if (!Globals::Instance->singleThreaded)
+				{
+					while (true)
+					{
+						if (numWorkersLeft <= 0)
+							break;
+
+						std::this_thread::sleep_for(std::chrono::milliseconds(250));
+					}
+				}
+
+				auto end = std::chrono::steady_clock::now();
+				auto diff = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+
+				printf("Generated OTR File Data in %i seconds\n", diff);
+			}
+			else
+			{
+				fs::path externalXmlFilePath =
+					Globals::Instance->cfg.externalXmlFolder / extFile.xmlPath;
+
+				if (Globals::Instance->verbosity >= VerbosityLevel::VERBOSITY_INFO)
+					printf("Parsing external file from config: '%s'\n",
+					       externalXmlFilePath.c_str());
+
+				parseSuccessful = Parse(externalXmlFilePath, Globals::Instance->baseRomPath,
+				                        extFile.outPath, ZFileMode::ExternalFile, 0);
+
+				if (!parseSuccessful)
+					return 1;
+			}
 		}
-
-		parseSuccessful = Parse(Globals::Instance->inputPath, Globals::Instance->baseRomPath,
-		                        Globals::Instance->outputPath, fileMode, 0);
-		if (!parseSuccessful)
-			return 1;
 	}
 
 	return 0;
