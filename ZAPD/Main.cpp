@@ -162,14 +162,26 @@ extern "C" int zapd_main(int argc, char* argv[])
 
 	// Parse File Mode
 	ExporterSet* exporterSet = Globals::Instance->GetExporterSet();
-	
-	if(Globals::Instance->onlyGenSohOtr) {
-		exporterSet->endProgramFunc();
 
-		delete g;
-		return 0;
+	// We've parsed through our commands once. If an exporter exists, it's been set by now.
+	// Now we'll parse through them again but pass them on to our exporter if one is available.
+	if (exporterSet != nullptr && exporterSet->parseArgsFunc != nullptr) {
+		for (int32_t i = 2; i < argc; i++) {
+			exporterSet->parseArgsFunc(argc, argv, i);
+		}
 	}
-	
+
+	if (Globals::Instance->onlyGenCustomOtr) {
+ 		if (exporterSet != nullptr) {
+ 			exporterSet->endProgramFunc();
+ 		} else {
+ 			printf("Error: No exporter set, unable to make custom otr.\n");
+ 		}
+
+ 		delete g;
+ 		return 0;
+ 	}
+
 	std::string buildMode = argv[1];
 	ZFileMode fileMode = ParseFileMode(buildMode, exporterSet);
 
@@ -183,14 +195,6 @@ extern "C" int zapd_main(int argc, char* argv[])
 
 	if (fileMode == ZFileMode::ExtractDirectory)
 		Globals::Instance->rom = new ZRom(Globals::Instance->baseRomPath.string());
-
-	// We've parsed through our commands once. If an exporter exists, it's been set by now.
-	// Now we'll parse through them again but pass them on to our exporter if one is available.
-	if (exporterSet != nullptr && exporterSet->parseArgsFunc != nullptr)
-	{
-		for (int32_t i = 2; i < argc; i++)
-			exporterSet->parseArgsFunc(argc, argv, i);
-	}
 
 	if (Globals::Instance->verbosity >= VerbosityLevel::VERBOSITY_INFO)
 		printf("ZAPD: Zelda Asset Processor For Decomp: %s\n", gBuildHash);
@@ -572,7 +576,7 @@ void Arg_SetBuildRawTexture([[maybe_unused]] int& i, [[maybe_unused]] char* argv
 
 void Arg_SetNoRomMode([[maybe_unused]] int& i, [[maybe_unused]] char* argv[])
 {
-	Globals::Instance->onlyGenSohOtr = true;
+	Globals::Instance->onlyGenCustomOtr = true;
 }
 
 int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet)
