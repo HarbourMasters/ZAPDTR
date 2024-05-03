@@ -22,8 +22,6 @@ set(Header_Files
 source_group("Header Files" FILES ${Header_Files})
 
 set(Header_Files__Libraries
-    "../../libultraship/extern/stb/stb_image.h"
-    "../../libultraship/extern/stb/stb_image_write.h"
     "ctpl_stl.h"
 )
 source_group("Header Files\\Libraries" FILES ${Header_Files__Libraries})
