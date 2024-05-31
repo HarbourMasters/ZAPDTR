@@ -115,7 +115,7 @@ ZRom::ZRom(std::string romPath)
 		break;
 	case OOT_NTSC_12:
 		version.version = "N64 NTSC 1.2";
-		version.listPath = "ntsc_oot.txt";
+		version.listPath = "ntsc_12_oot.txt";
 		version.offset = OOT_OFF_NTSC_12;
 		break;
 	case OOT_PAL_10:

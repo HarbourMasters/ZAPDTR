@@ -13,6 +13,7 @@ ZText::ZText(ZFile* nParent) : ZResource(nParent)
 {
 	RegisterRequiredAttribute("CodeOffset");
 	RegisterOptionalAttribute("LangOffset", "0");
+	RegisterOptionalAttribute("Language", "English");
 }
 
 void ZText::ParseRawData()
@@ -23,6 +24,12 @@ void ZText::ParseRawData()
 	uint32_t currentPtr = StringHelper::StrToL(registeredAttributes.at("CodeOffset").value, 16);
 	uint32_t langPtr = currentPtr;
 	bool isPalLang = false;
+	bool isJpnLang = false;
+
+	if (registeredAttributes.at("Language").value == "Japanese")
+	{
+		isJpnLang = true;
+	}
 
 	if (StringHelper::StrToL(registeredAttributes.at("LangOffset").value, 16) != 0)
 	{
@@ -43,8 +50,6 @@ void ZText::ParseRawData()
 	{
 		MessageEntry msgEntry;
 		msgEntry.id = BitConverter::ToInt16BE(codeData, currentPtr + 0);
-		msgEntry.textboxType = (codeData[currentPtr + 2] & 0xF0) >> 4;
-		msgEntry.textboxYPos = (codeData[currentPtr + 2] & 0x0F);
 
 		if (isPalLang)
 		{
@@ -59,50 +64,101 @@ void ZText::ParseRawData()
 
 		uint32_t msgPtr = msgEntry.msgOffset;
 
-		unsigned char c = rawData[msgPtr];
-		unsigned int extra = 0;
-		bool stop = false;
-
-		// Continue parsing until we are told to stop and all extra bytes are read
-		while ((c != '\0' && !stop) || extra > 0)
+		if (isJpnLang)
 		{
-			msgEntry.msg += c;
-			msgPtr++;
+			msgEntry.textboxType = (codeData[currentPtr + 2] & 0xF0) >> 4;
+			msgEntry.textboxYPos = (codeData[currentPtr + 2] & 0x0F);
 
-			// Some control codes require reading extra bytes
-			if (extra == 0)
-			{
-				// End marker, so stop this message and do not read anything else
-				if (c == 0x02)
-				{
-					stop = true;
-				}
-				else if (c == 0x05 || c == 0x13 || c == 0x0E || c == 0x0C || c == 0x1E || c == 0x06 ||
-				    c == 0x14)
-				{
-					extra = 1;
-				}
-				// "Continue to new text ID", so stop this message and read two more bytes for the text ID
-				else if (c == 0x07)
-				{
-					extra = 2;
-					stop = true;
-				}
-				else if (c == 0x12 || c == 0x11)
-				{
-					extra = 2;
-				}
-				else if (c == 0x15)
-				{
-					extra = 3;
-				}
-			}
-			else
-			{
-				extra--;
-			}
+			uint16_t c = BitConverter::ToUInt16BE(rawData, msgPtr);
+			unsigned int extra = 0;
+			bool stop = false;
 
-			c = rawData[msgPtr];
+			while (!stop || extra > 0) {
+				msgEntry.msg += rawData[msgPtr + 1];
+				msgEntry.msg += rawData[msgPtr];
+				msgPtr+=2;
+
+				// Some control codes require reading extra bytes
+				if (extra == 0)
+				{
+					// End marker, so stop this message and do not read anything else
+					if (c == 0x8170)
+					{
+						stop = true;
+					}
+					else if (c == 0x000B || c == 0x819A || c == 0x819E || c == 0x81A3 || c == 0x869F || 
+							 c == 0x86C7 || c == 0x86C9 || c == 0x81F3)
+					{
+						extra = 1;
+					}
+					// "Continue to new text ID", so stop this message and read one more short for the text ID
+					else if (c == 0x81CB)
+					{
+						extra = 1;
+						stop = true;
+					}
+					else if (c == 0x86B3)
+					{
+						extra = 2;
+					}
+				}
+				else
+				{
+					extra--;
+				}
+
+				c = BitConverter::ToUInt16BE(rawData, msgPtr);
+			}
+		}
+		else
+		{
+			unsigned char c = rawData[msgPtr];
+			unsigned int extra = 0;
+			bool stop = false;
+
+			msgEntry.textboxType = (codeData[currentPtr + 2] & 0xF0) >> 4;
+			msgEntry.textboxYPos = (codeData[currentPtr + 2] & 0x0F);
+			// Continue parsing until we are told to stop and all extra bytes are read
+			while ((c != '\0' && !stop) || extra > 0)
+			{
+				msgEntry.msg += c;
+				msgPtr++;
+
+				// Some control codes require reading extra bytes
+				if (extra == 0)
+				{
+					// End marker, so stop this message and do not read anything else
+					if (c == 0x02)
+					{
+						stop = true;
+					}
+					else if (c == 0x05 || c == 0x13 || c == 0x0E || c == 0x0C || c == 0x1E || c == 0x06 ||
+						c == 0x14)
+					{
+						extra = 1;
+					}
+					// "Continue to new text ID", so stop this message and read two more bytes for the text ID
+					else if (c == 0x07)
+					{
+						extra = 2;
+						stop = true;
+					}
+					else if (c == 0x12 || c == 0x11)
+					{
+						extra = 2;
+					}
+					else if (c == 0x15)
+					{
+						extra = 3;
+					}
+				}
+				else
+				{
+					extra--;
+				}
+
+				c = rawData[msgPtr];
+			}
 		}
 
 		messages.push_back(msgEntry);
