@@ -1,7 +1,7 @@
 #include "CrashHandler.h"
 #include "Utils/StringHelper.h"
 
-#if __has_include(<unistd.h>)
+#if __has_include(<unistd.h>) && !defined(__ANDROID__)
 #define HAS_POSIX 1
 #else
 #define HAS_POSIX 0
@@ -25,6 +25,8 @@
 #include <inttypes.h>
 
 #pragma comment(lib, "Dbghelp.lib")
+#else
+#include "WarningHandler.h"
 #endif
 
 // Feel free to add more crash messages.
