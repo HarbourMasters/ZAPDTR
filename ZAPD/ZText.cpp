@@ -1,3 +1,11 @@
+/*
+ * @brief ZText.cpp - Handles parsing and processing of text/message data from ROM files
+ * 
+ * This file implements the ZText class which handles parsing and processing of 
+ * text/message data from ROM files. It specifically handles message entries that
+ * contain text box information, message content, and control codes.
+ */
+
 #include "ZText.h"
 
 #include "Globals.h"
@@ -7,14 +15,27 @@
 #include "Utils/StringHelper.h"
 #include "ZFile.h"
 
+// Register this class as a file node type that can handle text resources
 REGISTER_ZFILENODE(Text, ZText);
 
+/*
+ * @brief Constructor - Initializes a new ZText resource
+ * @param nParent: Parent ZFile that contains this resource
+ */
 ZText::ZText(ZFile* nParent) : ZResource(nParent)
 {
 	RegisterRequiredAttribute("CodeOffset");
 	RegisterOptionalAttribute("LangOffset", "0");
 }
 
+/*
+ * @brief Parses raw text data from the ROM file
+ * 
+ * This method:
+ * 1. Reads message entries from code segment
+ * 2. Handles both regular and PAL language formats
+ * 3. Processes control codes and message content
+ */
 void ZText::ParseRawData()
 {
 	ZResource::ParseRawData();
@@ -39,13 +60,17 @@ void ZText::ParseRawData()
 	else
 		codeData = Globals::Instance->GetBaseromFile(Globals::Instance->baseRomPath.string() + "code");
 
+	// Process message entries until terminating ID is found (0xFFFC or 0xFFFF)
 	while (true)
 	{
 		MessageEntry msgEntry;
+		// Parse message header - ID and textbox properties
 		msgEntry.id = BitConverter::ToInt16BE(codeData, currentPtr + 0);
+		// Extract textbox type (high nibble) and Y position (low nibble)
 		msgEntry.textboxType = (codeData[currentPtr + 2] & 0xF0) >> 4;
 		msgEntry.textboxYPos = (codeData[currentPtr + 2] & 0x0F);
 
+		// Handle PAL vs non-PAL language format differences
 		if (isPalLang)
 		{
 			msgEntry.segmentId = (codeData[langPtr + 0]);
@@ -121,16 +146,28 @@ void ZText::ParseRawData()
 	int bp2 = 0;
 }
 
+/*
+ * @brief Returns the source type name for this resource
+ * @return The string "u8" indicating unsigned 8-bit data
+ */
 std::string ZText::GetSourceTypeName() const
 {
 	return "u8";
 }
 
+/*
+ * @brief Returns the size of the raw data in bytes
+ * @return Size of the resource data (1 byte)
+ */
 size_t ZText::GetRawDataSize() const
 {
 	return 1;
 }
 
+/*
+ * @brief Returns the resource type identifier
+ * @return ZResourceType::Text indicating this is a text resource
+ */
 ZResourceType ZText::GetResourceType() const
 {
 	return ZResourceType::Text;
