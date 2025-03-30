@@ -38,7 +38,7 @@ namespace fs = std::filesystem;
 #define OOT_OFF_PAL_GC_DBG2 0x12F70
 #define OOT_OFF_PAL_GC 0x7170
 #define OOT_OFF_PAL_MQ 0x7170
-#define OOT_OFF_JP_GC_CE 007170
+#define OOT_OFF_JP_GC_CE 0x7170
 #define OOT_OFF_CN_IQUE 0xB7A0
 #define OOT_OFF_TW_IQUE 0xB240
 
