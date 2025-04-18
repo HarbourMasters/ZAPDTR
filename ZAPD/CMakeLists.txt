@@ -474,12 +474,14 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
 else()
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
+	find_package(Backtrace REQUIRED)
 	set(ADDITIONAL_LIBRARY_DEPENDENCIES
 		-Wl,--whole-archive $<TARGET_LINKER_FILE_DIR:OTRExporter>/$<TARGET_LINKER_FILE_NAME:OTRExporter> -Wl,--no-whole-archive
 		"libultraship;"
 		PNG::PNG
 		${CMAKE_DL_LIBS}
 		Threads::Threads
+		${Backtrace_LIBRARY}
 	)
 endif()
 
