@@ -132,7 +132,7 @@ void BuildAssetTexture(const fs::path& pngFilePath, TextureType texType, const f
 void BuildAssetBackground(const fs::path& imageFilePath, const fs::path& outPath);
 void BuildAssetBlob(const fs::path& blobFilePath, const fs::path& outPath);
 ZFileMode ParseFileMode(const std::string& buildMode, ExporterSet* exporterSet);
-int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet);
+int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet, size_t* extractCount = nullptr, size_t* totalExtract = nullptr);
 int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileMode fileMode);
 
 std::atomic<unsigned int> numWorkersLeft = 0;
@@ -141,7 +141,7 @@ extern const char gBuildHash[];
 
 extern void ImportExporters();
 
-extern "C" int zapd_main(int argc, char* argv[])
+extern "C" int zapd_main(int argc, char* argv[], size_t* extractCount, size_t* totalExtract)
 {
 	int returnCode = 0;
 
@@ -217,7 +217,7 @@ extern "C" int zapd_main(int argc, char* argv[])
 		WarningHandler::PrintWarningsDebugInfo();
 
 	if (fileMode == ZFileMode::Extract || fileMode == ZFileMode::BuildSourceFile || fileMode == ZFileMode::ExtractDirectory)
-		returnCode = HandleExtract(fileMode, exporterSet);
+		returnCode = HandleExtract(fileMode, exporterSet, extractCount, totalExtract);
 	else if (fileMode == ZFileMode::BuildTexture)
 		BuildAssetTexture(Globals::Instance->inputPath, Globals::Instance->texType,
 		                  Globals::Instance->outputPath);
@@ -635,7 +635,7 @@ void Arg_SetXMLMode(int& i, char* argv[])
 	}
 }
 
-int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet)
+int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet, size_t* extractCount, size_t* totalExtract)
 {
 	bool procFileModeSuccess = false;
 
@@ -666,12 +666,18 @@ int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet)
 					Globals::Instance->workerData[i] = new FileWorker();
 
 				numWorkersLeft = fileListSize;
+				if (totalExtract != nullptr) {
+					*totalExtract = fileListSize;
+				}
 
 				for (size_t i = 0; i < fileListSize; i++)
 				{
 					if (Globals::Instance->singleThreaded)
 					{
 						ExtractFunc(i, fileList.size(), fileList[i], fileMode);
+						if (extractCount != nullptr) {
+							*extractCount = i;
+						}
 					}
 					else
 					{
