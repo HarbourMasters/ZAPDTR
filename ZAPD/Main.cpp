@@ -141,7 +141,7 @@ extern const char gBuildHash[];
 
 extern void ImportExporters();
 
-extern "C" int zapd_main(int argc, char* argv[], size_t* extractCount, size_t* totalExtract)
+extern "C" int zapd_report(int argc, char* argv[], size_t* extractCount, size_t* totalExtract)
 {
 	int returnCode = 0;
 
@@ -231,6 +231,10 @@ extern "C" int zapd_main(int argc, char* argv[], size_t* extractCount, size_t* t
 
 	delete g;
 	return returnCode;
+}
+
+extern "C" int zapd_main(int argc, char* argv[]) {
+	return zapd_report(argc, argv, nullptr, nullptr);
 }
 
 int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileMode fileMode)
