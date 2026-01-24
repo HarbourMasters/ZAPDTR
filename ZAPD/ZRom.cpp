@@ -44,6 +44,7 @@ namespace fs = std::filesystem;
 
 #define MM_OFF_US_10 0x1A500
 #define MM_OFF_US_GC 0x1AE90
+#define MM_OFF_PAL_10 0x1A650
 #define MM_OFF_PAL_11 0x1A8D0
 #define MM_OFF_JP_GC 0x1AE90
 #define MM_OFF_PAL_GC 0x1AE90
@@ -72,6 +73,7 @@ namespace fs = std::filesystem;
 
 #define MM_NTSC_10 0x5354631C
 #define MM_NTSC_10_UNCOMPRESSED 0xDA6983E7
+#define MM_PAL_10 0xE97955C6
 #define MM_PAL_11 0x0A5D8F83
 #define MM_NTSC_GC 0xB443EB08
 #define MM_NTSC_JP_GC 0x8473D0C1
@@ -96,6 +98,7 @@ bool ZRom::IsMQ() {
         // MM - Always not MQ
         case MM_NTSC_10:
         case MM_NTSC_10_UNCOMPRESSED:
+		case MM_PAL_10:
 		case MM_PAL_11:
 		case MM_NTSC_GC:
 		case MM_PAL_GC:
@@ -226,6 +229,11 @@ ZRom::ZRom(std::string romPath)
 		version.listPath = "mm_gc_jp.txt";
 		version.offset = MM_OFF_JP_GC;
 		break;
+	case MM_PAL_10:
+		version.version = "MM PAL 1.0";
+		version.listPath = "mm_pal.txt";
+		version.offset = MM_OFF_PAL_10;
+		break;
 	case MM_PAL_11:
 		version.version = "MM PAL 1.1";
 		version.listPath = "mm_pal.txt";
@@ -272,7 +280,7 @@ ZRom::ZRom(std::string romPath)
 		// know if this is MM or OOT
 #ifdef GAME_MM
 		// PAL filelists differ For yar file locations, TODO: Find way to avoid special casing numbers
-		if (version.crc == MM_PAL_11 || version.crc == MM_PAL_GC)
+		if (version.crc == MM_PAL_10 || version.crc == MM_PAL_11 || version.crc == MM_PAL_GC)
 		{
 			if ((i >= 17 && i <= 28) || i == 30)
 			{
