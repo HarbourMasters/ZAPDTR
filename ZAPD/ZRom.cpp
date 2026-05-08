@@ -112,10 +112,13 @@ bool ZRom::IsMQ() {
             return true;
     }
 }
+const RomVersion& ZRom::GetVersion() const
+{
+	return version;
+}
 
 ZRom::ZRom(std::string romPath)
 {
-	RomVersion version;
 	romData = DiskFile::ReadAllBytes(romPath);
 
 	BitConverter::RomToBigEndian(romData.data(), romData.size());
