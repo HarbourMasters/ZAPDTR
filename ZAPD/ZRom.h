@@ -21,7 +21,6 @@ public:
 
 	std::vector<uint8_t> GetFile(std::string fileName);
     bool IsMQ();
-	bool IsPal() const;
 	bool IsDebug() const;
 	bool IsN64() const;
 	[[nodiscard]] const RomVersion& GetVersion() const;
