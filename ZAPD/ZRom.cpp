@@ -113,34 +113,6 @@ bool ZRom::IsMQ() {
     }
 }
 
-bool ZRom::IsDebug() const
-{
-	switch (BitConverter::ToInt32BE(romData, 0x10)) { // crc
-	case OOT_PAL_GC_DBG1:
-	case OOT_PAL_GC_DBG2:
-	case OOT_PAL_GC_MQ_DBG:
-		return true;
-	default:
-		return false;
-	}
-}
-
-bool ZRom::IsN64() const
-{
-	switch (BitConverter::ToInt32BE(romData, 0x10)) { // crc
-	case OOT_NTSC_10:
-	case OOT_NTSC_11:
-	case OOT_NTSC_12:
-	case OOT_PAL_10:
-	case OOT_PAL_11:
-	case OOT_IQUE_TW:
-	case OOT_IQUE_CN:
-		return true;
-	default:
-		return false;
-	}
-}
-
 const RomVersion& ZRom::GetVersion() const
 {
 	return version;
