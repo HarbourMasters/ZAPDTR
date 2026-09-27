@@ -679,9 +679,13 @@ int HandleExtract(ZFileMode fileMode, ExporterSet* exporterSet, std::atomic<size
 				{
 					if (Globals::Instance->singleThreaded)
 					{
-						ExtractFunc(i, fileList.size(), fileList[i], fileMode);
+						const int result = ExtractFunc(i, fileList.size(), fileList[i], fileMode);
 						if (extractCount != nullptr) {
 							*extractCount = i;
+						}
+
+						if (result != 0) {
+							return result;
 						}
 					}
 					else
