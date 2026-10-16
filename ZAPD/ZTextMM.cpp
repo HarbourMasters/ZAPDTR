@@ -232,7 +232,7 @@ void ZTextMM::ParseMM()
 
 		messages.push_back(msgEntry);
 
-		if (msgEntry.id == 0xFFFC || msgEntry.id == 0xFFFF)
+		if (msgEntry.id == 0xFFFF)
 			break;
 
 		currentPtr += 8;
